@@ -2,12 +2,15 @@ package com.cars24.ai_loan_assistance.data.entities;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+@Setter
+@Getter
 @Document(collection = "user")
-@Data
 public class UserEntity {
     @Id
     private String id;
@@ -21,4 +24,5 @@ public class UserEntity {
     private String phone;
     @Field("role")
     private String role;
+
 }
