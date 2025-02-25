@@ -4,10 +4,7 @@ package com.cars24.ai_loan_assistance.controllers;
 import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
-import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
