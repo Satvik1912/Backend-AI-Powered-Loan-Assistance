@@ -7,5 +7,5 @@ import java.util.List;
 public interface LoanDao {
     LoanEntity store(LoanEntity loan);
 
-    List<LoanEntity> searchByField(String fieldName, String fieldValue, int page, int size);
+//    List<LoanEntity> searchByField(String fieldName, String fieldValue, int page, int size);
 }

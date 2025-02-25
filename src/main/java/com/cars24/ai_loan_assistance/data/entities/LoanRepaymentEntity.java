@@ -1,23 +1,27 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.util.Date;
 
-
+@Entity
+@Table(name = "loan_repayment") // Maps to MySQL table "loan_repayment"
 @Data
-@Document("Loan-Replacement")
 public class LoanRepaymentEntity {
 
     @Id
-    private String lrId;
-    @Field("lId")
-    private String lId;
-    @Field("amountPaid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment primary key
+    @Column(name = "lr_id")
+    private Long lrId;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_id", nullable = false) // Foreign key referencing LoanEntity
+    private LoanEntity loan;
+
+    @Column(name = "amount_paid", nullable = false)
     private double amountPaid;
-    @Field("paymentDate")
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "payment_date", nullable = false)
     private Date paymentDate;
 }
