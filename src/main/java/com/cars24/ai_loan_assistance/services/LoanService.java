@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 public interface LoanService {
     ResponseEntity<ApiResponse> createLoan(LoanRequest loanRequest);
 
-    ResponseEntity<ApiResponse> searchLoans(String loanFieldName, String loanFieldValue, int page, int size);
+//    ResponseEntity<ApiResponse> searchLoans(String loanFieldName, String loanFieldValue, int page, int size);
 }

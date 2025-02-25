@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if (userExists.isPresent()) {
             UserEntity userEntity = userExists.get();
             if (passwordEncoder.matches(user.getPassword(), userEntity.getPassword())) {
-                String id = userEntity.getId();
+                String id = String.valueOf(userEntity.getId());
                 String role = userEntity.getRole();
                 String name = userEntity.getName();
 

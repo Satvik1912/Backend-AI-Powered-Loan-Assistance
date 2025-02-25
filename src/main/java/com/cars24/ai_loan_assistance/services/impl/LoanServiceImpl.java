@@ -9,7 +9,6 @@ import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,12 +29,11 @@ public class LoanServiceImpl implements LoanService {
     private final LoanDao loanDao;
     private final UserRepository userRepository;
     private final LoanRepository loanRepository;
-    private final MongoTemplate mongoTemplate;
 
     @Override
     public ResponseEntity<ApiResponse> createLoan(LoanRequest loanRequest) {
         try {
-            Optional<UserEntity> userExists = userRepository.findById(loanRequest.getUserId());
+            Optional<UserEntity> userExists = userRepository.findById(Long.valueOf(loanRequest.getUserId()));
 
             if (userExists.isEmpty()) {
                 throw new RuntimeException("User does not exist");
@@ -88,54 +86,54 @@ public class LoanServiceImpl implements LoanService {
         }
     }
 
-    @Override
-    public ResponseEntity<ApiResponse> searchLoans(String fieldName, String fieldValue, int page, int size) {
-        try {
-            List<LoanEntity> loansExists = loanDao.searchByField(fieldName, fieldValue, 0, 1);
-
-            if (loansExists.isEmpty()) {
-                throw new RuntimeException("No loan records found for " + fieldName + " = " + fieldValue);
-            }
-            List<LoanEntity> loans = loanDao.searchByField(fieldName, fieldValue, page, size);
-            List<Map<String, Object>> responseData = loans.stream().map(loan -> {
-                Map<String, Object> loanData = new HashMap<>();
-                loanData.put("loanId", loan.getLId());
-                loanData.put("userId", loan.getUserId());
-                loanData.put("loanType", loan.getLoanType());
-                loanData.put("loanAmount", loan.getLoanAmount());
-                loanData.put("disbursalDate", loan.getDisbursalDate());
-                loanData.put("status", loan.getStatus());
-                return loanData;
-            }).collect(Collectors.toList());
-
-            ApiResponse response = new ApiResponse(
-                    HttpStatus.OK.value(),
-                    "Loan records retrieved successfully",
-                    "APPUSR-" + HttpStatus.OK.value(),
-                    true,
-                    responseData
-            );
-
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(
-                            HttpStatus.NOT_FOUND.value(),
-                            e.getMessage(),
-                            "APPUSR-" + HttpStatus.NOT_FOUND.value(),
-                            false,
-                            new HashMap<>()
-                    ));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse(
-                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                            "An error occurred: " + e.getMessage(),
-                            "APPUSR-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                            false,
-                            new HashMap<>()
-                    ));
-        }
-    }
+//    @Override
+//    public ResponseEntity<ApiResponse> searchLoans(String fieldName, String fieldValue, int page, int size) {
+//        try {
+//            List<LoanEntity> loansExists = loanDao.searchByField(fieldName, fieldValue, 0, 1);
+//
+//            if (loansExists.isEmpty()) {
+//                throw new RuntimeException("No loan records found for " + fieldName + " = " + fieldValue);
+//            }
+//            List<LoanEntity> loans = loanDao.searchByField(fieldName, fieldValue, page, size);
+//            List<Map<String, Object>> responseData = loans.stream().map(loan -> {
+//                Map<String, Object> loanData = new HashMap<>();
+//                loanData.put("loanId", loan.getLId());
+//                loanData.put("userId", loan.getUserId());
+//                loanData.put("loanType", loan.getLoanType());
+//                loanData.put("loanAmount", loan.getLoanAmount());
+//                loanData.put("disbursalDate", loan.getDisbursalDate());
+//                loanData.put("status", loan.getStatus());
+//                return loanData;
+//            }).collect(Collectors.toList());
+//
+//            ApiResponse response = new ApiResponse(
+//                    HttpStatus.OK.value(),
+//                    "Loan records retrieved successfully",
+//                    "APPUSR-" + HttpStatus.OK.value(),
+//                    true,
+//                    responseData
+//            );
+//
+//            return ResponseEntity.status(HttpStatus.OK).body(response);
+//
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiResponse(
+//                            HttpStatus.NOT_FOUND.value(),
+//                            e.getMessage(),
+//                            "APPUSR-" + HttpStatus.NOT_FOUND.value(),
+//                            false,
+//                            new HashMap<>()
+//                    ));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ApiResponse(
+//                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                            "An error occurred: " + e.getMessage(),
+//                            "APPUSR-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                            false,
+//                            new HashMap<>()
+//                    ));
+//        }
+//    }
 }
