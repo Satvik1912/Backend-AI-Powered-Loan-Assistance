@@ -1,18 +1,20 @@
 package com.cars24.ai_loan_assistance.data.requests;
 
 
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 public class LoanRequest
 {
-    private String userId;
+    private Long userId;
     private double loanAmount;
-    private String loanType;
+    private LoanType loanType;
     private String status;
-    private String disbursalDate;
+    private LocalDate disbursalDate;
 }

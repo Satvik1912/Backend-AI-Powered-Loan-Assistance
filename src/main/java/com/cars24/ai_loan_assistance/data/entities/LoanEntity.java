@@ -1,24 +1,44 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanType;
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import java.time.LocalDate;
 
-@Document(collection = "loans")
 @Data
+@Entity
+@Table(name = "loan")
 public class LoanEntity {
 
     @Id
-    private String lId;
-    @Field("userId")
-    private String userId;
-    @Field("loanAmount")
-    private double loanAmount;
-    @Field("loanType")
-    private String loanType;
-    @Field("status")
-    private String status;
-    @Field("disbursalDate")
-    private String disbursalDate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "loan_id")
+    private Long loanId;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @Column(name = "loan_amount", nullable = false)
+    private Double loanAmount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private LoanStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private LoanType type;
+
+    @Column(name = "disbursed_date")
+    private LocalDate disbursedDate;
+
+    @Column(name = "principal")
+    private Double principal;
+
+    @Column(name = "tenure")
+    private Double tenure;
+
+    @Column(name = "interest")
+    private Double interest;
 }

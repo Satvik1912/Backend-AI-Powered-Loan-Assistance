@@ -1,28 +1,34 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
-
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-@Setter
-@Getter
-@Document(collection = "user")
+@Data
+@Entity
+@Table(name = "user")
 public class UserEntity {
-    @Id
-    private String id;
-    @Field("name")
-    private String name;
-    @Field("email")
-    private String email;
-    @Field("password")
-    private String password;
-    @Field("phoneNumber")
-    private String phone;
-    @Field("role")
-    private String role;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "phone_number", unique = true, nullable = false)
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }

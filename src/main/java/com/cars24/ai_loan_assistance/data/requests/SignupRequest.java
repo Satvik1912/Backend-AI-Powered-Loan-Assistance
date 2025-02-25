@@ -1,8 +1,9 @@
 package com.cars24.ai_loan_assistance.data.requests;
 
 
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Field;
+
 
 @Data
 public class SignupRequest {
@@ -10,5 +11,5 @@ public class SignupRequest {
     private String email;
     private String password;
     private String phone;
-    private String role;
+    private Role role;
 }
