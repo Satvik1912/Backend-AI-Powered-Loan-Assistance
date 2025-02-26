@@ -1,29 +1,44 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanType;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDate;
 
-@Entity
-@Table(name = "loans") // Maps to MySQL table "loans"
 @Data
+@Entity
+@Table(name = "loan")
 public class LoanEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment primary key
-    private Long lId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "loan_id")
+    private Long loanId;
 
-    @Column(name = "user_id")
-    private String userId;  // Changed to Long assuming it references UserEntity's id
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @Column(name = "loan_amount")
-    private double loanAmount;
+    @Column(name = "loan_amount", nullable = false)
+    private Double loanAmount;
 
-    @Column(name = "loan_type")
-    private String loanType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private LoanStatus status;
 
-    @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private LoanType type;
 
-    @Column(name = "disbursal_date")
-    private String disbursalDate; // Consider changing to `LocalDate` for better date handling
+    @Column(name = "disbursed_date")
+    private LocalDate disbursedDate;
+
+    @Column(name = "principal")
+    private Double principal;
+
+    @Column(name = "tenure")
+    private Double tenure;
+
+    @Column(name = "interest")
+    private Double interest;
 }

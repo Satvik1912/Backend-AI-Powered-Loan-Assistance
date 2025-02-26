@@ -1,8 +1,8 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
-
 
 @Data
 @Entity
@@ -10,7 +10,7 @@ import lombok.Data;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -25,6 +25,10 @@ public class UserEntity {
     @Column(name = "phone_number", unique = true, nullable = false)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }
