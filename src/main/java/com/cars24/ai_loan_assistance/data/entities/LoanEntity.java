@@ -31,7 +31,7 @@ public class LoanEntity {
     private LoanType type;
 
     @Column(name = "disbursed_date")
-    private LocalDate disbursedDate;
+    private String disbursedDate;
 
     @Column(name = "principal")
     private Double principal;

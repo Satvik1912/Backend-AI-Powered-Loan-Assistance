@@ -42,9 +42,9 @@ public class LoanServiceImpl implements LoanService {
 
             LoanEntity loanStatusEntity = new LoanEntity();
             loanStatusEntity.setUserId(loanRequest.getUserId());
-            loanStatusEntity.setType(loanRequest.getLoanType());
+            loanStatusEntity.setType(loanRequest.getType());
             loanStatusEntity.setLoanAmount(loanRequest.getLoanAmount());
-            loanStatusEntity.setDisbursedDate(loanRequest.getDisbursalDate());
+            loanStatusEntity.setDisbursedDate(loanRequest.getDisbursedDate());
             loanStatusEntity.setStatus(LoanStatus.valueOf("pending"));
 
             LoanEntity savedLoanStatus = loanDao.store(loanStatusEntity);

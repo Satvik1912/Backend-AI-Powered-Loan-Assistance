@@ -1,6 +1,7 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,9 +28,12 @@ public class UserDetailService implements UserDetailsService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        // Adding a default "USER" role (modify as needed)
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        // Assign role dynamically based on user data
+        Role role = user.getRole(); // Assuming your entity has a `role` field
+
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
         return new User(user.getEmail(), user.getPassword(), authorities);
     }
+
 }

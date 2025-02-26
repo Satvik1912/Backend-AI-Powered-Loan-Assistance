@@ -4,5 +4,5 @@ public enum LoanStatus {
 //    REJECTED, Rejected, rejected,
 //    PENDING, Pending, pending,
 //    DISBURSED, Disbursed, disbursed
-    Rejected, Pending, Disbursed
+    rejected, pending, disbursed
 }

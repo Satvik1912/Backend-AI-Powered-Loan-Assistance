@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")  // Load from application.properties
+    @Value("${jwt.secret}")
     private String SECRET_KEY;
 
     private final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
