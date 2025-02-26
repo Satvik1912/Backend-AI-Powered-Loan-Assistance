@@ -5,6 +5,7 @@ import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
 import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,17 @@ public class LoanController {
         return loanService.createLoan(loanRequest);
     }
 
+    @GetMapping("/loan/{id}")
+    @PreAuthorize("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse> getLoan(@Valid @PathVariable("id") long loan_id){
+        return loanService.getLoan(loan_id);
+    }
 
+    @GetMapping("/loans")
+    @PreAuthorize("!hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse> getLoans(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit){
+        return loanService.getLoans(page, limit);
+    }
 
     /*
     @Id

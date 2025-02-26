@@ -10,6 +10,7 @@ import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -136,4 +137,36 @@ public class LoanServiceImpl implements LoanService {
 //                    ));
 //        }
 //    }
+
+    @Override
+    public ResponseEntity<ApiResponse> getLoan(long  loan_id) {
+        LoanEntity loanEntity = loanDao.getLoan(loan_id);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
+                "Loan retrieved successfully",
+                "APPUSR-" + HttpStatus.OK.value(),
+                true,
+                loanEntity);
+
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> getLoans(int page, int limit) {
+        Page<LoanEntity> loanEntityPage = loanDao.getLoans(page, limit);
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("loans", loanEntityPage.getContent());
+        responseData.put("totalElements", loanEntityPage.getTotalElements());
+        responseData.put("totalPages", loanEntityPage.getTotalPages());
+        responseData.put("currentPage", loanEntityPage.getNumber());
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
+                "Loans retrieved successfully",
+                "APPUSR-" + HttpStatus.OK.value(),
+                true,
+                responseData);
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
 }

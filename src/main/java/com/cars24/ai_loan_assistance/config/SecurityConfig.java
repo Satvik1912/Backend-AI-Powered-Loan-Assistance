@@ -27,8 +27,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/user/admin/**").hasRole("ADMIN")  // Admin endpoints
-                        .requestMatchers("/api/user/create").hasRole("USER")    // User endpoints
+                        .requestMatchers("/api/user/admin/**","/api/user/loans","/api/user/loan/{id}").hasRole("ADMIN")  // Admin endpoints
+                        .requestMatchers("/api/user/create","/api/user/loan/{id}").hasRole("USER")    // User endpoints
                         .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
                         .anyRequest().authenticated()
                 )

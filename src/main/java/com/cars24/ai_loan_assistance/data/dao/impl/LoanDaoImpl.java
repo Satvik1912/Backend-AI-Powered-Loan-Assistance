@@ -6,7 +6,12 @@ import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.cars24.ai_loan_assistance.exceptions.LoanServiceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,4 +73,16 @@ public class LoanDaoImpl implements LoanDao {
 //        query.skip((long) page * size).limit(size);
 //        return mongoTemplate.find(query, LoanEntity.class);
 //    }
+
+    @Override
+    public LoanEntity getLoan(long  loan_id) {
+        return loanRepository.findById(loan_id)
+                .orElseThrow(()->new LoanServiceException("Loan does not exist"));
+    }
+
+    @Override
+    public Page<LoanEntity> getLoans(int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return loanRepository.findAll(pageable);
+    }
 }
