@@ -3,6 +3,7 @@ package com.cars24.ai_loan_assistance.services.impl;
 import com.cars24.ai_loan_assistance.data.dao.LoanDao;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
@@ -33,7 +34,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public ResponseEntity<ApiResponse> createLoan(LoanRequest loanRequest) {
         try {
-            Optional<UserEntity> userExists = userRepository.findById(Long.valueOf(loanRequest.getUserId()));
+            Optional<UserEntity> userExists = userRepository.findById(loanRequest.getUserId());
 
             if (userExists.isEmpty()) {
                 throw new RuntimeException("User does not exist");
@@ -41,17 +42,16 @@ public class LoanServiceImpl implements LoanService {
 
             LoanEntity loanStatusEntity = new LoanEntity();
             loanStatusEntity.setUserId(loanRequest.getUserId());
-            loanStatusEntity.setLoanType(loanRequest.getLoanType());
+            loanStatusEntity.setType(loanRequest.getLoanType());
             loanStatusEntity.setLoanAmount(loanRequest.getLoanAmount());
-            loanStatusEntity.setDisbursalDate(loanRequest.getDisbursalDate());
-            loanStatusEntity.setStatus("pending");
+            loanStatusEntity.setDisbursedDate(loanRequest.getDisbursalDate());
+            loanStatusEntity.setStatus(LoanStatus.valueOf("pending"));
 
             LoanEntity savedLoanStatus = loanDao.store(loanStatusEntity);
 
-
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("userId", savedLoanStatus.getUserId());
-            responseData.put("loanType", savedLoanStatus.getLoanType());
+            responseData.put("loanType", savedLoanStatus.getType());
             responseData.put("loanAmount", savedLoanStatus.getLoanAmount());
             responseData.put("status", savedLoanStatus.getStatus());
 

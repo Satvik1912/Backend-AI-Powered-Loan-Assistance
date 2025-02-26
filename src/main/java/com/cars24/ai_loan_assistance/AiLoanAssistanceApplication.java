@@ -9,9 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "com.cars24.ai_loan_assistance.data.repositories")
 @EntityScan(basePackages = "com.cars24.ai_loan_assistance.data.entities")
 public class AiLoanAssistanceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AiLoanAssistanceApplication.class, args);
 	}
-
 }

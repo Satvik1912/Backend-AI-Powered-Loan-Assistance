@@ -2,6 +2,7 @@ package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.impl.UserDaoImpl;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.LoginRequest;
 import com.cars24.ai_loan_assistance.data.requests.SignupRequest;
@@ -56,10 +57,10 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userExists.get();
             if (passwordEncoder.matches(user.getPassword(), userEntity.getPassword())) {
                 String id = String.valueOf(userEntity.getId());
-                String role = userEntity.getRole();
+                Role role = userEntity.getRole();
                 String name = userEntity.getName();
 
-                String token = jwtUtil.generateToken(user.getEmail(), id, role);
+                String token = jwtUtil.generateToken(user.getEmail(), id, String.valueOf(role));
 
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("token", token);
