@@ -8,10 +8,11 @@ import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/loan")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class LoanController {
 
@@ -19,6 +20,7 @@ public class LoanController {
     private final LoanService loanService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> create(@RequestBody LoanRequest loanRequest) {
         return loanService.createLoan(loanRequest);
     }

@@ -23,9 +23,12 @@ public class UserDetailService implements UserDetailsService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        // Adding a default "USER" role (modify as needed)
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        // Assign role dynamically based on user data
+        String role = user.getRole(); // Assuming your entity has a `role` field
+
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
 
         return new User(user.getEmail(), user.getPassword(), authorities);
     }
+
 }
