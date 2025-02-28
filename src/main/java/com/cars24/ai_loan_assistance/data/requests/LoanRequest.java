@@ -18,8 +18,8 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class LoanRequest
 {
-    @NotNull(message = "User ID cannot be null")
-    private Long userId;
+    @NotNull(message = "Loan amount cannot be null")
+    private String email;
 
     @NotNull(message = "Loan amount cannot be null")
     @Positive(message = "Loan amount must be positive")
@@ -31,7 +31,7 @@ public class LoanRequest
     @NotNull(message = "Loan type cannot be null")
     private LoanType type;
 
-    private String disbursedDate;
+    private LocalDate disbursedDate;
 
     @NotNull(message = "Principal amount cannot be null")
     @Positive(message = "Principal amount must be positive")
