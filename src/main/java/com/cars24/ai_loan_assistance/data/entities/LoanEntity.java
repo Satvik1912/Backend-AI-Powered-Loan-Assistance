@@ -2,9 +2,14 @@ package com.cars24.ai_loan_assistance.data.entities;
 
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,11 +21,18 @@ public class LoanEntity {
     @Column(name = "loan_id")
     private Long loanId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_loan_user"))
+    @JsonBackReference("user-loans")
+    private UserEntity user;
 
-    @Column(name = "loan_amount", nullable = false)
-    private Double loanAmount;
+    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL)
+    @JsonManagedReference("loan-detail")
+    private LoanDetailEntity loanDetail;
+
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+    @JsonManagedReference("loan-emis")
+    private List<EmiEntity> emis = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -31,14 +43,8 @@ public class LoanEntity {
     private LoanType type;
 
     @Column(name = "disbursed_date")
-    private String disbursedDate;
+    private LocalDate disbursedDate;
 
-    @Column(name = "principal")
-    private Double principal;
-
-    @Column(name = "tenure")
-    private Double tenure;
-
-    @Column(name = "interest")
-    private Double interest;
+    @Column(name = "amount_left")
+    private Double amountLeft;
 }

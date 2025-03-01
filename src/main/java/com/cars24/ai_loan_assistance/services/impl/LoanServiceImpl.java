@@ -1,9 +1,12 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.LoanDao;
+import com.cars24.ai_loan_assistance.data.entities.BankEntity;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.UserInformationEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
@@ -15,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -35,25 +35,23 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public ResponseEntity<ApiResponse> createLoan(LoanRequest loanRequest) {
         try {
-            Optional<UserEntity> userExists = userRepository.findById(loanRequest.getUserId());
-
+            Optional<UserEntity> userExists = userRepository.findByEmail(loanRequest.getEmail());
             if (userExists.isEmpty()) {
                 throw new RuntimeException("User does not exist");
             }
 
             LoanEntity loanStatusEntity = new LoanEntity();
-            loanStatusEntity.setUserId(loanRequest.getUserId());
+            UserEntity user = new UserEntity();
+            loanStatusEntity.setUser(userExists.get());
             loanStatusEntity.setType(loanRequest.getType());
-            loanStatusEntity.setLoanAmount(loanRequest.getLoanAmount());
             loanStatusEntity.setDisbursedDate(loanRequest.getDisbursedDate());
             loanStatusEntity.setStatus(LoanStatus.valueOf("pending"));
 
             LoanEntity savedLoanStatus = loanDao.store(loanStatusEntity);
 
             Map<String, Object> responseData = new HashMap<>();
-            responseData.put("userId", savedLoanStatus.getUserId());
+            responseData.put("user info:", savedLoanStatus.getUser());
             responseData.put("loanType", savedLoanStatus.getType());
-            responseData.put("loanAmount", savedLoanStatus.getLoanAmount());
             responseData.put("status", savedLoanStatus.getStatus());
 
             ApiResponse response = new ApiResponse(
