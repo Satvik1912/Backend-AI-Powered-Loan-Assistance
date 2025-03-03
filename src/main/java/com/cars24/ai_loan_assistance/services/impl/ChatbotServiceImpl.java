@@ -9,10 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 
+import static com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent.*;
+
 @Service
 @RequiredArgsConstructor
 public class ChatbotServiceImpl implements ChatbotService {
     private final AccountServiceImpl accountService;
+    private final EmiServiceImpl emiServiceImpl;
+    private final LoanDetailServiceImpl loanDetailService;
     @Override
     public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
         switch (intent) {
@@ -21,9 +25,15 @@ public class ChatbotServiceImpl implements ChatbotService {
             case ACC_KYC:
                 return accountService.getKycDetails(email);
             case LOAN_ACTIVE_NUMBER:
-                return null;
+                return loanDetailService.getLoanCountByEmail(email);
             case LOAN_ACTIVE_DETAILS:
-                return null;
+                return loanDetailService.getLoanDetailsByEmail(email);
+            case PRINCIPAL_AMOUNT:
+                return loanDetailService.getPrincipalByEmail(email);
+            case LOAN_TENURE:
+                return loanDetailService.getTenureByEmail(email);
+            case INTEREST_RATE:
+                return loanDetailService.getInterestByEmail(email);
             case LOAN_STATUS:
                 return null;
             case BANK_LINKED_NUMBER:
@@ -34,8 +44,27 @@ public class ChatbotServiceImpl implements ChatbotService {
                 return null;
             case BANK_CIBIL:
                 return null;
+            case EMI_DUE_DATE:
+                return emiServiceImpl.getNextEmiDueDate(email);
+            case EMI_AMOUNT:
+                return emiServiceImpl.getEmiAmount(email);
+            case EMI_STATUS:
+                return emiServiceImpl.getEmiStatus(email);
+            case EMI_PAYMENTS:
+                return emiServiceImpl.checkMissedPayments(email);
+            case LATE_FEE:
+                return emiServiceImpl.getLateFee(email);
+            case EMI_SCHEDULE:
+                return emiServiceImpl.getCompleteEmiSchedule(email);
+
             default:
-                return null;
+                return ResponseEntity.badRequest().body(
+                        new ApiResponse(400,
+                                "Sorry, I didn't understand that. Please ask a valid question.",
+                                "InvalidRequest",
+                                false,
+                                null)
+                );
         }
 
     }

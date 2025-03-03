@@ -6,6 +6,9 @@ public enum ChatbotIntent {
     ACC_CONTACT,
     LOAN_ACTIVE_NUMBER,
     LOAN_ACTIVE_DETAILS,
+    PRINCIPAL_AMOUNT,
+    LOAN_TENURE,
+    INTEREST_RATE,
     LOAN_STATUS,
     BANK_ADD,
     BANK_UPDATE,
@@ -13,5 +16,12 @@ public enum ChatbotIntent {
     BANK_LINKED_DETAILS,
     BANK_VIEW_SALARY,
     BANK_UPDATE_SALARY,
-    BANK_CIBIL
+    BANK_CIBIL,
+    EMI_DUE_DATE,
+    EMI_AMOUNT,
+    EMI_STATUS,
+    EMI_PAYMENTS,
+    LATE_FEE,
+    EMI_SCHEDULE
+
 }

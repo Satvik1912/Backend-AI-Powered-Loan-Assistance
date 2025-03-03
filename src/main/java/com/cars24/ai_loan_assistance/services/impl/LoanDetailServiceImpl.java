@@ -2,8 +2,10 @@ package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.entities.LoanDetailEntity;
 import com.cars24.ai_loan_assistance.data.repositories.LoanDetailRepository;
+import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,54 +18,79 @@ public class LoanDetailServiceImpl implements LoanDetailService {
     private LoanDetailRepository loanDetailRepository;
 
     @Override
-    public String getLoanDetailsByEmail(String email) {
+    public ResponseEntity<ApiResponse> getLoanDetailsByEmail(String email) {
         List<LoanDetailEntity> loans = loanDetailRepository.findByLoan_User_Email(email);
-        if (loans.isEmpty()) return "No loan details found for your email. Please check your email or contact support.";
+        if (loans.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(400, "Sorry, There is no such loan Detail.", "InvalidRequest", false, null)
+            );
+        }
 
-        return "Here are your loan details:**\n\n" + loans.stream()
+        String details = loans.stream()
                 .map(loan -> String.format(
-                        "Loan ID: %d\n" +
-                                "Principal Amount:%.2f\n" +
-                                "Tenure:** %.0f months\n" +
-                                "Interest Rate: %.2f%%\n" +
-                                "------------------------------------",
+                        "Loan ID: %d  Principal Amount: %.2f  Tenure: %.0f months  Interest Rate: %.2f%%",
                         loan.getLoan().getLoanId(), loan.getPrincipal(), loan.getTenure(), loan.getInterest()))
-                .collect(Collectors.joining("\n\n"));
+                .collect(Collectors.joining("\n\n------------------------------------\n\n"));
+
+        return ResponseEntity.ok(new ApiResponse(200, "Here are your loan details.", "LoanDetails", true, details));
     }
 
     @Override
-    public String getPrincipalByEmail(String email) {
+    public ResponseEntity<ApiResponse> getPrincipalByEmail(String email) {
         List<LoanDetailEntity> loans = loanDetailRepository.findByLoan_User_Email(email);
-        if (loans.isEmpty()) return "No principal amount found.";
+        if (loans.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(400, "Sorry, No such Data present.", "InvalidRequest", false, null)
+            );
+        }
 
-        return "Your principal amounts:\n\n" + loans.stream()
+        String principalAmounts = loans.stream()
                 .map(loan -> String.format("Loan ID: %d - %.2f", loan.getLoan().getLoanId(), loan.getPrincipal()))
                 .collect(Collectors.joining("\n"));
+
+        return ResponseEntity.ok(new ApiResponse(200, "Your principal amounts.", "PrincipalDetails", true, principalAmounts));
     }
 
     @Override
-    public String getTenureByEmail(String email) {
+    public ResponseEntity<ApiResponse> getTenureByEmail(String email) {
         List<LoanDetailEntity> loans = loanDetailRepository.findByLoan_User_Email(email);
-        if (loans.isEmpty()) return "No tenure details found.";
+        if (loans.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(400, "Sorry, No such data.", "InvalidRequest", false, null)
+            );
+        }
 
-        return "Your loan tenures:\n\n" + loans.stream()
+        String tenures = loans.stream()
                 .map(loan -> String.format("Loan ID: %d - %.0f months", loan.getLoan().getLoanId(), loan.getTenure()))
                 .collect(Collectors.joining("\n"));
+
+        return ResponseEntity.ok(new ApiResponse(200, "Your loan tenures.", "TenureDetails", true, tenures));
     }
 
     @Override
-    public String getInterestByEmail(String email) {
+    public ResponseEntity<ApiResponse> getInterestByEmail(String email) {
         List<LoanDetailEntity> loans = loanDetailRepository.findByLoan_User_Email(email);
-        if (loans.isEmpty()) return "No interest rate found.";
+        if (loans.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(400, "Sorry, No such data", "InvalidRequest", false, null)
+            );
+        }
 
-        return "Your loan interest rates:\n\n" + loans.stream()
+        String interests = loans.stream()
                 .map(loan -> String.format("Loan ID: %d - %.2f%% interest", loan.getLoan().getLoanId(), loan.getInterest()))
                 .collect(Collectors.joining("\n"));
+
+        return ResponseEntity.ok(new ApiResponse(200, "Your loan interest rates.", "InterestDetails", true, interests));
     }
 
     @Override
-    public String getLoanCountByEmail(String email) {
+    public ResponseEntity<ApiResponse> getLoanCountByEmail(String email) {
         long count = loanDetailRepository.findByLoan_User_Email(email).size();
-        return count > 0 ? "You currently have " + count + " active loan(s)." : "No active loans found.";
+        if (count == 0) {
+            return ResponseEntity.badRequest().body(
+                    new ApiResponse(400, "No active loans found.", "LoanCount", false, 0)
+            );
+        }
+        return ResponseEntity.ok(new ApiResponse(200, "You currently have " + count + " active loan(s).", "LoanCount", true, count));
     }
 }

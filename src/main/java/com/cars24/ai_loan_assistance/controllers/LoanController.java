@@ -37,24 +37,5 @@ public class LoanController {
         return loanService.getLoans(page, limit);
     }
 
-    /*
-    @Id
-    private String lId;
-    @Field("userId")
-    @Field("loanAmount")
-    @Field("loanType")
-    @Field("status")
-    @Field("disbursalDate")
-    */
-
-//    @GetMapping("/searchLoans")
-//    public ResponseEntity<ApiResponse> searchLoans(
-//            @RequestParam String fieldName,
-//            @RequestParam String fieldValue,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size) {
-//        return loanService.searchLoans(fieldName, fieldValue, page, size);
-//    }
-
 }
 

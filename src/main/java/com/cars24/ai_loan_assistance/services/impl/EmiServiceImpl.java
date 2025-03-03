@@ -2,8 +2,10 @@ package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.entities.EmiEntity;
 import com.cars24.ai_loan_assistance.data.repositories.EmiRepository;
+import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.EmiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,62 +17,54 @@ public class EmiServiceImpl implements EmiService {
     @Autowired
     private EmiRepository emiRepository;
 
-    public String getNextEmiDueDate(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> getNextEmiDueDate(String email) {
         Optional<EmiEntity> nextEmi = emiRepository.findByUserEmail(email).stream()
                 .filter(emi -> emi.getStatus().name().equals("PENDING"))
                 .min((e1, e2) -> e1.getDueDate().compareTo(e2.getDueDate()));
-          // Lamda function is used to find the nearst due date
 
-        return nextEmi.map(emi -> "Your next EMI is due on: " + emi.getDueDate())
-                .orElse("No pending EMIs found.");
+        return ResponseEntity.ok(new ApiResponse(200, "Next EMI due date retrieved",
+                "getNextEmiDueDate", true, nextEmi.orElse(null)));
     }
 
-    public String getEmiAmount(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> getEmiAmount(String email) {
         Optional<EmiEntity> emi = emiRepository.findByUserEmail(email).stream().findFirst();
-        return emi.map(e -> "Your EMI amount is: " + e.getEmiAmount())
-                .orElse("No EMI records found.");
+        return ResponseEntity.ok(new ApiResponse(200, "EMI amount retrieved",
+                "getEmiAmount", true, emi));
     }
 
-    public String getEmiStatus(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> getEmiStatus(String email) {
         List<EmiEntity> emis = emiRepository.findByUserEmail(email);
-        if (emis.isEmpty()) return "No EMI records found.";
-
-        long pendingCount = emis.stream().filter(e -> e.getStatus().name().equals("PENDING")).count();
-        long paidCount = emis.stream().filter(e -> e.getStatus().name().equals("PAID")).count();
-        long overdueCount = emis.stream().filter(e -> e.getStatus().name().equals("OVERDUE")).count();
-
-        return String.format("EMI Status: PENDING (%d), PAID (%d), OVERDUE (%d)", pendingCount, paidCount, overdueCount);
+        return ResponseEntity.ok(new ApiResponse(200, "EMI status retrieved",
+                "getEmiStatus", true, emis));
     }
 
-    public String checkMissedPayments(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> checkMissedPayments(String email) {
         List<EmiEntity> overdueEmis = emiRepository.findByUserEmail(email).stream()
                 .filter(emi -> emi.getStatus().name().equals("OVERDUE"))
                 .toList();
 
-        return overdueEmis.isEmpty() ? "You have no missed EMI payments."
-                : "You have " + overdueEmis.size() + " overdue EMIs.";
+        return ResponseEntity.ok(new ApiResponse(200, "Missed payments check",
+                "checkMissedPayments", true, overdueEmis));
     }
 
-    public String getLateFee(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> getLateFee(String email) {
         double totalLateFee = emiRepository.findByUserEmail(email).stream()
                 .mapToDouble(EmiEntity::getLateFee)
                 .sum();
 
-        return "Your total late fee is: " + totalLateFee;
+        return ResponseEntity.ok(new ApiResponse(200, "Late fee retrieved",
+                "getLateFee", true, totalLateFee));
     }
 
-    public String getCompleteEmiSchedule(String email) {
+    @Override
+    public ResponseEntity<ApiResponse> getCompleteEmiSchedule(String email) {
         List<EmiEntity> emis = emiRepository.findByUserEmail(email);
-        if (emis.isEmpty()) return "No EMI records found.";
-
-        StringBuilder schedule = new StringBuilder("Your EMI Schedule:\n");
-        for (EmiEntity emi : emis) {
-            schedule.append(String.format(
-                    "₹%.2f | Due: %s | Status: %s\n",
-                    emi.getEmiAmount(), emi.getDueDate(), emi.getStatus().name()
-            ));
-        }
-        return schedule.toString();
+        return ResponseEntity.ok(new ApiResponse(200, "EMI schedule retrieved",
+                "getCompleteEmiSchedule", true, emis));
     }
 }
-
