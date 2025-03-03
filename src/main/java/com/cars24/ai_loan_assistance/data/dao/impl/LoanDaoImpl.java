@@ -1,20 +1,14 @@
 package com.cars24.ai_loan_assistance.data.dao.impl;
 
-
 import com.cars24.ai_loan_assistance.data.dao.LoanDao;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.cars24.ai_loan_assistance.exceptions.LoanServiceException;
+import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +71,7 @@ public class LoanDaoImpl implements LoanDao {
     @Override
     public LoanEntity getLoan(long  loan_id) {
         return loanRepository.findById(loan_id)
-                .orElseThrow(()->new LoanServiceException("Loan does not exist"));
+                .orElseThrow(()->new NotFoundException("Loan does not exist"));
     }
 
     @Override

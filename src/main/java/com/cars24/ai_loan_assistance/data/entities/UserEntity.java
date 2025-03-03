@@ -43,6 +43,9 @@ public class UserEntity {
     @Column(name = "phone_number", unique = true, nullable = false)
     private String phone;
 
+    @Column(name = "address")
+    private String address;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;

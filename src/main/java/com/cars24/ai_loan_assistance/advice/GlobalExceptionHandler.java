@@ -1,7 +1,7 @@
 package com.cars24.ai_loan_assistance.advice;
 
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
-import com.cars24.ai_loan_assistance.exceptions.LoanServiceException;
+import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    @ExceptionHandler(LoanServiceException.class)
-    public  ResponseEntity<ApiResponse> handleServiceExceptions(LoanServiceException exception)
+    @ExceptionHandler(NotFoundException.class)
+    public  ResponseEntity<ApiResponse> handleServiceExceptions(NotFoundException exception)
     {
         ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), "APP_USER - " + HttpStatus.BAD_REQUEST.value(),false,null);
         return ResponseEntity.badRequest().body(apiResponse);

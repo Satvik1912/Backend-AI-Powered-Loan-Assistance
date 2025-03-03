@@ -26,9 +26,6 @@ public class UserInformationEntity {
     @Column(name = "aadhar", nullable = false)
     private String aadhar;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "salary", nullable = false)
     private Double salary;
 
