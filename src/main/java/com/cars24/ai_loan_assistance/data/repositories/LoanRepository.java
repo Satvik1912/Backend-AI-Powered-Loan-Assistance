@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity,Long> {
+    LoanEntity findByUserId(long user_id);
 }
