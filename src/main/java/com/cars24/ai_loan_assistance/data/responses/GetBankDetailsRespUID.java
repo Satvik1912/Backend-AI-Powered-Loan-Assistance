@@ -1,4 +1,4 @@
-package com.gemini.gemini.data.response;
+package com.cars24.ai_loan_assistance.data.responses;
 
 import lombok.Data;
 

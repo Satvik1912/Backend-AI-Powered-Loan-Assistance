@@ -1,4 +1,4 @@
-package com.gemini.gemini.data.entity;
+package com.cars24.ai_loan_assistance.data.entities;
 
 
 import jakarta.persistence.*;

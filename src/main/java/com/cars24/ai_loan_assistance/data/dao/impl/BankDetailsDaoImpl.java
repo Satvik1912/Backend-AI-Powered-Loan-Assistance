@@ -1,11 +1,11 @@
-package com.gemini.gemini.dao.impl;
+package com.cars24.ai_loan_assistance.data.dao.impl;
 
-import com.gemini.gemini.Repository.BankDetailsRepository;
-import com.gemini.gemini.dao.BankDetailsDao;
-import com.gemini.gemini.data.entity.BankDetailsEntity;
-import com.gemini.gemini.data.request.CreateBankDetails;
-import com.gemini.gemini.data.request.GetBankDetailsOfUser;
-import com.gemini.gemini.data.response.GetBankDetailsRespUID;
+import com.cars24.ai_loan_assistance.data.dao.BankDetailsDao;
+import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
+import com.cars24.ai_loan_assistance.data.repositories.BankDetailsRepository;
+import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
+import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
+import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
