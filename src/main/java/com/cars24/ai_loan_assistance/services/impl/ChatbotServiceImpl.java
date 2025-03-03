@@ -13,6 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChatbotServiceImpl implements ChatbotService {
     private final AccountServiceImpl accountService;
+    private final BankDetailsServiceImpl bankDetailsService;
     @Override
     public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
         switch (intent) {

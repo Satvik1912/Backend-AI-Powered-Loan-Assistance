@@ -1,4 +1,4 @@
-GetBankDetailsOfUserpackage com.gemini.gemini.data.request;
+package com.cars24.ai_loan_assistance.data.requests;
 
 import jakarta.persistence.Column;
 import lombok.Data;
