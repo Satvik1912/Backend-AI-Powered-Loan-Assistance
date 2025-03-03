@@ -21,6 +21,7 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final AccountServiceImpl accountService;
     private final LoanServiceImpl loanService;
     private final UserInformationService userInformationService;
+    private final BankDetailsServiceImpl bankDetailsService;
     @Override
     public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
         switch (intent) {
