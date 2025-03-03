@@ -18,7 +18,7 @@ public class LoanDetailServiceImpl implements LoanDetailService {
     @Override
     public String getLoanDetailsByEmail(String email) {
         List<LoanDetailEntity> loans = loanDetailRepository.findByLoan_User_Email(email);
-        if (loans.isEmpty()) return "No loan details found for your email.** Please check your email or contact support.";
+        if (loans.isEmpty()) return "No loan details found for your email. Please check your email or contact support.";
 
         return "Here are your loan details:**\n\n" + loans.stream()
                 .map(loan -> String.format(

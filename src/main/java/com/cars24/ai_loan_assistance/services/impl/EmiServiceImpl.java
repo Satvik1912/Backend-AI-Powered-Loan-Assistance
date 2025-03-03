@@ -19,6 +19,7 @@ public class EmiServiceImpl implements EmiService {
         Optional<EmiEntity> nextEmi = emiRepository.findByUserEmail(email).stream()
                 .filter(emi -> emi.getStatus().name().equals("PENDING"))
                 .min((e1, e2) -> e1.getDueDate().compareTo(e2.getDueDate()));
+          // Lamda function is used to find the nearst due date
 
         return nextEmi.map(emi -> "Your next EMI is due on: " + emi.getDueDate())
                 .orElse("No pending EMIs found.");
@@ -55,7 +56,7 @@ public class EmiServiceImpl implements EmiService {
                 .mapToDouble(EmiEntity::getLateFee)
                 .sum();
 
-        return "Your total late fee is: ₹" + totalLateFee;
+        return "Your total late fee is: " + totalLateFee;
     }
 
     public String getCompleteEmiSchedule(String email) {
@@ -72,3 +73,4 @@ public class EmiServiceImpl implements EmiService {
         return schedule.toString();
     }
 }
+

@@ -1,6 +1,4 @@
 package com.cars24.ai_loan_assistance.controllers;
-
-
 import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
