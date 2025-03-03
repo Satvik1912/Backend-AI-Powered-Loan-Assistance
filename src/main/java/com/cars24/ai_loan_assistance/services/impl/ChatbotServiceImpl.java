@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 
-import static com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent.ACC_PROFILE;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,52 +23,46 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final UserInformationService userInformationService;
     @Override
     public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
-        if (intent == ACC_PROFILE) {
-            log.info("[chatbotService if-else]");
-            return accountService.getUserProfile(email);
-        } else if (intent == ChatbotIntent.ACC_KYC) {
-            return accountService.getKycDetails(email);
-        } else if (intent == ChatbotIntent.LOAN_ACTIVE_NUMBER) {
-            return loanService.getActiveLoans(email);
-        } else if (intent == ChatbotIntent.LOAN_ACTIVE_DETAILS) {
-            return ResponseEntity.ok(new ApiResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Feature not implemented yet.",
-                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                    false,
-                    null
-            ));
-        } else if (intent == ChatbotIntent.LOAN_STATUS) {
-            return loanService.getLoansByUser(email);
-        } else if (intent == ChatbotIntent.BANK_LINKED_NUMBER) {
-            return ResponseEntity.ok(new ApiResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Feature not implemented yet.",
-                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                    false,
-                    null
-            ));
-        } else if (intent == ChatbotIntent.BANK_LINKED_DETAILS) {
-            return ResponseEntity.ok(new ApiResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Feature not implemented yet.",
-                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                    false,
-                    null
-            ));
-        } else if (intent == ChatbotIntent.BANK_VIEW_SALARY) {
-            return userInformationService.getSalaryDetails(email);
-        } else if (intent == ChatbotIntent.BANK_CIBIL) {
-            return userInformationService.getCibil(email);
-        } else {
-            return ResponseEntity.badRequest().body(new ApiResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "ERROR: INVALID DATA!",
-                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                    false,
-                    null
-            ));
+        switch (intent) {
+            case ACC_PROFILE:
+                return accountService.getUserProfile(email);
+
+            case ACC_KYC:
+                return accountService.getKycDetails(email);
+
+            case LOAN_ACTIVE_NUMBER:
+                return loanService.getActiveLoans(email);
+
+            case LOAN_ACTIVE_DETAILS:
+            case BANK_LINKED_NUMBER:
+            case BANK_LINKED_DETAILS:
+                return ResponseEntity.ok(new ApiResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Feature not implemented yet.",
+                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                        false,
+                        null
+                ));
+
+            case LOAN_STATUS:
+                return loanService.getLoansByUser(email);
+
+            case BANK_VIEW_SALARY:
+                return userInformationService.getSalaryDetails(email);
+
+            case BANK_CIBIL:
+                return userInformationService.getCibil(email);
+
+            default:
+                return ResponseEntity.badRequest().body(new ApiResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "ERROR: INVALID DATA!",
+                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                        false,
+                        null
+                ));
         }
+
     }
 
     @Override
@@ -78,7 +70,6 @@ public class ChatbotServiceImpl implements ChatbotService {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case ACC_CONTACT:
-                log.info("[hello]");
                 ContactUpdateRequest contactUpdateRequest = objectMapper.convertValue(request, ContactUpdateRequest.class);
                 return accountService.updateContactInfo(email, contactUpdateRequest);
             case BANK_UPDATE:
