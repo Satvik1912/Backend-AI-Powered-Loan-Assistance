@@ -70,7 +70,8 @@ public class UserServiceImpl implements UserService {
 
                 return generateApiResponse(HttpStatus.OK.value(), true, "User Logged in successfully", responseData, "APPUSER");
             } else {
-                return generateApiResponse(HttpStatus.UNAUTHORIZED.value(), false, "Invalid Username or Password", null, "APPUSER");
+                throw new RuntimeException("Invalid Username or Password");
+//                return generateApiResponse(HttpStatus.BAD_REQUEST.value(), false, "Invalid Username or Password", null, "APPUSER");
             }
         }
         return generateApiResponse(HttpStatus.BAD_REQUEST.value(), false, "User doesn't exist. Please SignUp", null, "APPUSER");

@@ -4,15 +4,14 @@ import com.cars24.ai_loan_assistance.data.requests.SignupRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserController {
 
     private final UserServiceImpl userservice;
@@ -24,8 +23,13 @@ public ResponseEntity<ApiResponse> signUp(@RequestBody SignupRequest user)
 }
 @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest user) {
-        ApiResponse response = userservice.login(user);
-        return ResponseEntity.ok().body(response);
+        try{
+            ApiResponse response = userservice.login(user);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ApiResponse response = new ApiResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), "APPUSER",false, null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
     }
 
 }

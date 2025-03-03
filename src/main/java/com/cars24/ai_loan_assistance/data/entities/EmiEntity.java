@@ -19,7 +19,7 @@ public class EmiEntity {
     private Long emiId;
 
     @ManyToOne
-    @JoinColumn(name = "loan_id", nullable = false, foreignKey = @ForeignKey(name = "fk_emi_loan"))
+    @JoinColumn(name = "loan_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_emi_loan"))
     @JsonBackReference("loan-emis")
     private LoanEntity loan;
 
