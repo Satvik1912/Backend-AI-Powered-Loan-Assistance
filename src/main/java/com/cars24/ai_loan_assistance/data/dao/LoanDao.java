@@ -1,6 +1,8 @@
 package com.cars24.ai_loan_assistance.data.dao;
 
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
+
 import org.springframework.data.domain.Page;
 
 import java.util.List;
