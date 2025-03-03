@@ -17,7 +17,7 @@ public class UserInformationEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_user_information_user"))
+    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_user_information_user"))
     @JsonBackReference("user-info")
     private UserEntity user;
 
