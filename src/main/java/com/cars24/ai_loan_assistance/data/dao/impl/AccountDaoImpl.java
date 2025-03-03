@@ -10,8 +10,10 @@ import com.cars24.ai_loan_assistance.data.responses.KycResponse;
 import com.cars24.ai_loan_assistance.data.responses.UserProfileResponse;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountDaoImpl implements AccountDao {
@@ -21,6 +23,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public UserProfileResponse getUserProfile(String email) {
+        log.info("[getUserProfile] in dao");
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserProfileResponse response = new UserProfileResponse();

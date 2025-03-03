@@ -20,19 +20,16 @@ public class ChatbotController {
     private final ChatbotService chatbotService;
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(@RequestParam String email, @RequestParam ChatbotIntent intent, @RequestParam(defaultValue = "0") Long additional) {
-        chatbotService.processQuery(email,intent, String.valueOf(additional));
-        return null;
+        return chatbotService.processQuery(email,intent, String.valueOf(additional));
     }
 
     @PutMapping("/update")
     public ResponseEntity<ApiResponse> handleUpdate(@RequestParam String email, @RequestParam ChatbotIntent intent, @Valid @RequestBody Map<String, Object> request) {
-        chatbotService.processUpdate(email, intent, request);
-        return null;
+        return chatbotService.processUpdate(email, intent, request);
     }
 
-    @PutMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> handleCreate(@RequestParam String email, @RequestParam ChatbotIntent intent, @Valid @RequestBody Map<String, Object> request) {
-        chatbotService.processCreate(email,intent,request);
-        return null;
+        return chatbotService.processCreate(email,intent,request);
     }
 }

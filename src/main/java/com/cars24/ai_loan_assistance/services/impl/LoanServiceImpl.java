@@ -10,7 +10,9 @@ import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.LoanRequest;
+import com.cars24.ai_loan_assistance.data.responses.ActiveLoansResponse;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
+import com.cars24.ai_loan_assistance.data.responses.GetLoansResponse;
 import com.cars24.ai_loan_assistance.services.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -163,6 +165,30 @@ public class LoanServiceImpl implements LoanService {
                 "APPUSR-" + HttpStatus.OK.value(),
                 true,
                 responseData);
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> getActiveLoans(String email) {
+        ActiveLoansResponse data = loanDao.getActiveLoans(email);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
+                "Active loans retrieved successfully",
+                "LOANS_SERVICE-" + HttpStatus.OK.value(),
+                true,
+                data);
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> getLoansByUser(String email) {
+        GetLoansResponse data = loanDao.getLoansByUser(email);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
+                "Loan status retrieved successfully",
+                "LOANS_SERVICE-" + HttpStatus.OK.value(),
+                true,
+                data);
 
         return ResponseEntity.ok().body(apiResponse);
     }

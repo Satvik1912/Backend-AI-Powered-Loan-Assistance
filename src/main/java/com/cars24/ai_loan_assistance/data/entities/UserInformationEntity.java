@@ -4,6 +4,7 @@ import com.cars24.ai_loan_assistance.data.entities.enums.IncomeType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Data;
 
 @Data
