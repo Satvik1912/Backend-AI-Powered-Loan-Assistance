@@ -9,19 +9,20 @@ import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.BankDetailsRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
+import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
-import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
-import com.cars24.ai_loan_assistance.data.responses.BankFullDetails;
-import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
-import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
+import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,6 +92,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
 
     @Override
     public BankFullDetails bankfulldetails(String email, long bankid) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User does not exist!"));
         BankEntity bank = bankDetailsRepository.findById(bankid)
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
         BankFullDetails bankFullDetails = new BankFullDetails();
@@ -102,6 +105,37 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
         bankFullDetails.setAccountHolderName(bank.getAccountHolderName());
 
         return bankFullDetails;
+    }
+
+    @Override
+    public UpdateBankDetails updatebankdetails(String email, BankDetailsUpdateRequest request) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+
+        BankEntity bank = bankDetailsRepository.findById(request.getBankId())
+                .orElseThrow(() -> new NotFoundException("Bank details not found!"));
+
+        if (!bank.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to update this bank account!");
+
+        }
+        if (request.getAccountHolderName() != null) {
+            bank.setAccountHolderName(request.getAccountHolderName());
+        }
+        if (request.getBankAccountType() != null) {
+            bank.setBankAccountType(request.getBankAccountType());
+        }
+        if(request.getBankName()!=null){
+            bank.setBankName(request.getBankName());
+        }
+
+        bankDetailsRepository.save(bank);
+        UpdateBankDetails updateBankDetails = new UpdateBankDetails();
+        updateBankDetails.setBankName(request.getBankName());
+        updateBankDetails.setBankAccountType(request.getBankAccountType());
+        updateBankDetails.setAccountHolderName(request.getAccountHolderName());
+
+        return updateBankDetails;
     }
 
 }

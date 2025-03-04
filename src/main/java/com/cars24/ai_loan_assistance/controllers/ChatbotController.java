@@ -1,6 +1,7 @@
 package com.cars24.ai_loan_assistance.controllers;
 
 import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
+import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.ContactUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
@@ -80,7 +81,9 @@ public class ChatbotController {
                 ContactUpdateRequest contactUpdateRequest = objectMapper.convertValue(request, ContactUpdateRequest.class);
                 return accountService.updateContactInfo(email, contactUpdateRequest);
             case BANK_UPDATE:
-                return null;
+                BankDetailsUpdateRequest bankDetailsUpdateRequest =  objectMapper.convertValue(request, BankDetailsUpdateRequest.class);
+                return bankDetailsService.updatebankdetails(email,bankDetailsUpdateRequest);
+
             case BANK_UPDATE_SALARY:
                 SalaryUpdateRequest salaryUpdateRequest = objectMapper.convertValue(request, SalaryUpdateRequest.class);
                 return userInformationService.updateSalaryDetails(email, salaryUpdateRequest);

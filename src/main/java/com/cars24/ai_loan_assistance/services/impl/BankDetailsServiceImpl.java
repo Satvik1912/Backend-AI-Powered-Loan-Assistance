@@ -2,12 +2,10 @@ package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.impl.BankDetailsDaoImpl;
 import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
+import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
-import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
-import com.cars24.ai_loan_assistance.data.responses.BankFullDetails;
-import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
-import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
+import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.services.BankDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,12 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Override
     public ResponseEntity<ApiResponse> createBankDetails(String email,CreateBankDetails createBankDetails) {
         bankDetailsDao.createBankDetails(email,createBankDetails);
-        return null;
+        return ResponseEntity.ok(new ApiResponse(
+                HttpStatus.OK.value(),
+                "Bank details Created",
+                "BankDetailsService",
+                true,null
+        ));
 
     }
 
@@ -73,6 +77,20 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 "BankDetailsService",
                 true,
                 bankFullDetails
+        ));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> updatebankdetails(String email, BankDetailsUpdateRequest request) {
+        UpdateBankDetails updateBankDetails =  bankDetailsDao.updatebankdetails(email,request);
+
+
+        return ResponseEntity.ok(new ApiResponse(
+                HttpStatus.OK.value(),
+                "Bank details updated successfully",
+                "BankDetailsService",
+                true,
+                updateBankDetails
         ));
     }
 }
