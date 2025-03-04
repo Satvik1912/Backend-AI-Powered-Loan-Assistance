@@ -5,6 +5,7 @@ import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
+import com.cars24.ai_loan_assistance.data.responses.BankFullDetails;
 import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
 import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
 import com.cars24.ai_loan_assistance.services.BankDetailsService;
@@ -60,6 +61,18 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 "BankDetailsService",
                 true,
                 response
+        ));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse> bankfulldetails(String email, long bankid) {
+        BankFullDetails bankFullDetails = bankDetailsDao.bankfulldetails(email,bankid);
+        return ResponseEntity.ok(new ApiResponse(
+                HttpStatus.OK.value(),
+                "Bank details retrieved successfully",
+                "BankDetailsService",
+                true,
+                bankFullDetails
         ));
     }
 }

@@ -12,6 +12,7 @@ import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
+import com.cars24.ai_loan_assistance.data.responses.BankFullDetails;
 import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
 import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
@@ -86,6 +87,21 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .collect(Collectors.toList());
 
         return new CountBankAcc(bankCount, bankDetails);
+    }
+
+    @Override
+    public BankFullDetails bankfulldetails(String email, long bankid) {
+        BankEntity bank = bankDetailsRepository.findById(bankid)
+                .orElseThrow(() -> new NotFoundException("Bank details not found!"));
+        BankFullDetails bankFullDetails = new BankFullDetails();
+        bankFullDetails.setBankName(bank.getBankName());
+        bankFullDetails.setUser(bank.getUser());
+        bankFullDetails.setBankAccountType(bank.getBankAccountType());
+        bankFullDetails.setIfscCode(bank.getIfscCode());
+        bankFullDetails.setAccountNumber(bank.getAccountNumber());
+        bankFullDetails.setAccountHolderName(bank.getAccountHolderName());
+
+        return bankFullDetails;
     }
 
 }

@@ -49,13 +49,7 @@ public class ChatbotController {
                 return bankDetailsService.countofbanks(email);
 
             case BANK_LINKED_DETAILS:
-                return ResponseEntity.ok(new ApiResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Feature not implemented yet.",
-                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                        false,
-                        null
-                ));
+                return bankDetailsService.bankfulldetails(email,additional);
 
             case LOAN_STATUS:
                 return loanService.getLoansByUser(email);

@@ -17,4 +17,5 @@ public interface BankDetailsService {
     public GetBankDetailsRespUID getBankDetailsRespUID(GetBankDetailsOfUser getBankDetailsOfUser);
     public List<BankDetailsEntity> getAllBank();
     public ResponseEntity<ApiResponse> countofbanks(String email);
+    public ResponseEntity<ApiResponse> bankfulldetails(String email , long bankid);
 }
