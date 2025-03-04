@@ -29,7 +29,7 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
 
     private final BankDetailsRepository bankDetailsRepository;
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     GetBankDetailsRespUID getBankDetailsRespUID = new GetBankDetailsRespUID();
     @Override
     public String createBankDetails(String email , CreateBankDetails createBankDetails) {
