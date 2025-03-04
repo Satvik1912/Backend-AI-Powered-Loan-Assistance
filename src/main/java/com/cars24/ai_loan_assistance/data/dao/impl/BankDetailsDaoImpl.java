@@ -80,13 +80,12 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         List<BankEntity> bankEntityList = bankDetailsRepository.findByUserId(user.getId());
 
-
         int bankCount = bankEntityList.size();
         List<BankInfoDTO> bankDetails = bankEntityList.stream()
-                .map(bank -> new BankInfoDTO(bank.getBankName(), bank.getAccountNumber()))
+                .map(bank -> new BankInfoDTO(bank.getBankId(), bank.getBankName(), bank.getAccountNumber()))  // Include bankId
                 .collect(Collectors.toList());
 
         return new CountBankAcc(bankCount, bankDetails);
-
     }
+
 }
