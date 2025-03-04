@@ -1,22 +1,26 @@
 package com.cars24.ai_loan_assistance.data.requests;
 
-import jakarta.persistence.Column;
+import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.BankAccountType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
 @Data
 public class CreateBankDetails {
-    private String full_name;
 
-    private String account_no;
+    private UserEntity user;
 
-    private  String bank_acc_type;
+    private String accountNumber;
 
-    private  String bank_name;
+    private String accountHolderName;
 
-    private  String ifsc_code;
+    private String ifscCode;
 
-    private  Long uid;
+    private String bankName;
+
+    private BankAccountType bankAccountType;
 
 
 }

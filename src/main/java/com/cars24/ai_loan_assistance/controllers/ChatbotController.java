@@ -2,6 +2,7 @@ package com.cars24.ai_loan_assistance.controllers;
 
 import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
 import com.cars24.ai_loan_assistance.data.requests.ContactUpdateRequest;
+import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.ChatbotService;
@@ -29,8 +30,10 @@ public class ChatbotController {
     private final UserInformationService userInformationService;
     private final BankDetailsServiceImpl bankDetailsService;
 
+
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(@RequestParam String email, @RequestParam ChatbotIntent intent, @RequestParam(defaultValue = "0") Long additional) {
+
         switch (intent) {
             case ACC_PROFILE:
                 return accountService.getUserProfile(email);
@@ -43,6 +46,8 @@ public class ChatbotController {
 
             case LOAN_ACTIVE_DETAILS:
             case BANK_LINKED_NUMBER:
+                return bankDetailsService.countofbanks(email);
+
             case BANK_LINKED_DETAILS:
                 return ResponseEntity.ok(new ApiResponse(
                         HttpStatus.BAD_REQUEST.value(),
@@ -94,9 +99,12 @@ public class ChatbotController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> handleCreate(@RequestParam String email, @RequestParam ChatbotIntent intent, @Valid @RequestBody Map<String, Object> request) {
 //        return chatbotService.processCreate(email,intent,request);
+        ObjectMapper objectMapper = new ObjectMapper();
+
         switch (intent) {
             case BANK_ADD:
-                return null;
+               CreateBankDetails createBankDetails =  objectMapper.convertValue(request, CreateBankDetails.class);
+                return bankDetailsService.createBankDetails(email,createBankDetails);
             default:
                 return null;
         }

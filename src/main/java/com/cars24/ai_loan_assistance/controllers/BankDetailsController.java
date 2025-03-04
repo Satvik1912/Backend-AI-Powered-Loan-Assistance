@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("bankdetails")
+@RequestMapping("/bankdetails")
 @Service
 @RequiredArgsConstructor
 public class BankDetailsController {
 
     private final BankDetailsServiceImpl bankDetailsService;
-    @PostMapping("create")
-    public String bankdetails(@RequestBody CreateBankDetails createBankDetails){
-
-        bankDetailsService.createBankDetails(createBankDetails);
-
-        return "Bank Details Added Successfully";
-    }
+//    @PostMapping("/create")
+//    public String bankdetails(@RequestBody CreateBankDetails createBankDetails){
+//
+//        bankDetailsService.createBankDetails(createBankDetails);
+//
+//        return "Bank Details Added Successfully";
+//    }
 
     @GetMapping("fetchbyid")
     public GetBankDetailsRespUID userbank(@RequestBody GetBankDetailsOfUser getBankDetailsOfUser){

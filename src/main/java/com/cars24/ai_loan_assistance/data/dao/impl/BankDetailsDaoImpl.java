@@ -1,34 +1,52 @@
 package com.cars24.ai_loan_assistance.data.dao.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.BankDetailsDao;
+import com.cars24.ai_loan_assistance.data.dto.BankInfoDTO;
 import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
+import com.cars24.ai_loan_assistance.data.entities.BankEntity;
+import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
+import com.cars24.ai_loan_assistance.data.entities.UserEntity;
+import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.BankDetailsRepository;
+import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
+import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
+import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
 import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
+import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BankDetailsDaoImpl implements BankDetailsDao {
 
-    BankDetailsEntity bankDetailsEntity = new BankDetailsEntity();
     private final BankDetailsRepository bankDetailsRepository;
+
+    UserRepository userRepository;
     GetBankDetailsRespUID getBankDetailsRespUID = new GetBankDetailsRespUID();
     @Override
-    public String createBankDetails(CreateBankDetails createBankDetails) {
-        bankDetailsEntity.setBank_name(createBankDetails.getBank_name());
-        bankDetailsEntity.setBank_acc_type(createBankDetails.getBank_acc_type());
-bankDetailsEntity.setAccount_no(createBankDetails.getAccount_no());
-bankDetailsEntity.setIfsc_code(createBankDetails.getIfsc_code());
-bankDetailsEntity.setFull_name(createBankDetails.getFull_name());
-bankDetailsEntity.setUid(createBankDetails.getUid());
-bankDetailsRepository.save(bankDetailsEntity);
-return null;
+    public String createBankDetails(String email , CreateBankDetails createBankDetails) {
+
+        BankEntity bankEntity = new BankEntity();
+
+
+        bankEntity.setBankName(createBankDetails.getBankName());
+
+        bankEntity.setBankAccountType(createBankDetails.getBankAccountType());
+        bankEntity.setAccountNumber(createBankDetails.getAccountNumber());
+        bankEntity.setUser(createBankDetails.getUser());
+        bankEntity.setIfscCode(createBankDetails.getIfscCode());
+        bankEntity.setAccountHolderName(createBankDetails.getAccountHolderName());
+        bankDetailsRepository.save(bankEntity);
+
+        return null;
 
 
 
@@ -51,6 +69,30 @@ return null;
 
     @Override
     public List<BankDetailsEntity> getAllBankDetails() {
-        return bankDetailsRepository.findAll()   ;
+//        return bankDetailsRepository.findAll()   ;
+        return null;
+    }
+
+    @Override
+    public CountBankAcc countofbanks(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+        List<BankEntity> bankEntityList = bankDetailsRepository.findByUserId(user.getId());
+
+
+        int bankCount = bankEntityList.size();
+        List<BankInfoDTO> bankDetails = bankEntityList.stream()
+                .map(bank -> new BankInfoDTO(bank.getBankName(), bank.getAccountNumber()))
+                .collect(Collectors.toList());
+
+        return new CountBankAcc(bankCount, bankDetails);
+
+
+
+
+
+
+
+
     }
 }
