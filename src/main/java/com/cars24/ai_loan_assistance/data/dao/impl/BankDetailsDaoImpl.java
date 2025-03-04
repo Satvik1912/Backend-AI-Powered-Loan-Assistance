@@ -16,11 +16,11 @@ import com.cars24.ai_loan_assistance.data.responses.CountBankAcc;
 import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -56,15 +56,16 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     public GetBankDetailsRespUID getbankdetailsofid(GetBankDetailsOfUser getBankDetailsOfUser) {
 
         System.out.println(getBankDetailsOfUser.getUid());
-       BankDetailsEntity user =  bankDetailsRepository.getByUid(getBankDetailsOfUser.getUid());
-        System.out.println(user);
-       getBankDetailsRespUID.setBank_name(user.getBank_name());
-
-       getBankDetailsRespUID.setBank_acc_type(user.getBank_acc_type());
-       getBankDetailsRespUID.setAccount_no(user.getAccount_no());
-       getBankDetailsRespUID.setIfsc_code(user.getIfsc_code());
-       getBankDetailsRespUID.setFull_name(user.getFull_name());
-       return getBankDetailsRespUID;
+//       BankDetailsEntity user =  bankDetailsRepository.getByUid(getBankDetailsOfUser.getUid());
+//        System.out.println(user);
+//       getBankDetailsRespUID.setBank_name(user.getBank_name());
+//
+//       getBankDetailsRespUID.setBank_acc_type(user.getBank_acc_type());
+//       getBankDetailsRespUID.setAccount_no(user.getAccount_no());
+//       getBankDetailsRespUID.setIfsc_code(user.getIfsc_code());
+//       getBankDetailsRespUID.setFull_name(user.getFull_name());
+//       return getBankDetailsRespUID;
+        return null;
     }
 
     @Override
@@ -86,13 +87,6 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .collect(Collectors.toList());
 
         return new CountBankAcc(bankCount, bankDetails);
-
-
-
-
-
-
-
 
     }
 }
