@@ -13,8 +13,9 @@ public class LoanDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @MapsId
     @OneToOne
-    @JoinColumn(name = "loan_id", nullable = false, foreignKey = @ForeignKey(name = "fk_loan_details_loan"))
+    @JoinColumn(name = "loan_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_loan_details_loan"))
     @JsonBackReference("loan-detail")
     private LoanEntity loan;
 

@@ -1,4 +1,4 @@
-package com.cars24.ai_loan_assistance.controllers;
+package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
 import com.cars24.ai_loan_assistance.data.requests.ContactUpdateRequest;
@@ -6,31 +6,24 @@ import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.ChatbotService;
 import com.cars24.ai_loan_assistance.services.UserInformationService;
-import com.cars24.ai_loan_assistance.services.impl.AccountServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.BankDetailsServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.stereotype.Service;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/chatbot")
+@Slf4j
+@Service
 @RequiredArgsConstructor
-@Validated
-public class ChatbotController {
+public class ChatbotServiceImpl implements ChatbotService {
     private final AccountServiceImpl accountService;
     private final LoanServiceImpl loanService;
     private final UserInformationService userInformationService;
     private final BankDetailsServiceImpl bankDetailsService;
-
-    @GetMapping("/query")
-    public ResponseEntity<ApiResponse> handleQuery(@RequestParam String email, @RequestParam ChatbotIntent intent, @RequestParam(defaultValue = "0") Long additional) {
+    @Override
+    public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
         switch (intent) {
             case ACC_PROFILE:
                 return accountService.getUserProfile(email);
@@ -70,11 +63,11 @@ public class ChatbotController {
                         null
                 ));
         }
+
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<ApiResponse> handleUpdate(@RequestParam String email, @RequestParam ChatbotIntent intent, @Valid @RequestBody Map<String, Object> request) {
-//        return chatbotService.processUpdate(email, intent, request);
+    @Override
+    public ResponseEntity<ApiResponse> processUpdate(String email, ChatbotIntent intent, Map<String, Object> request) {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case ACC_CONTACT:
@@ -91,9 +84,8 @@ public class ChatbotController {
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> handleCreate(@RequestParam String email, @RequestParam ChatbotIntent intent, @Valid @RequestBody Map<String, Object> request) {
-//        return chatbotService.processCreate(email,intent,request);
+    @Override
+    public ResponseEntity<ApiResponse> processCreate(String email, ChatbotIntent intent, Map<String, Object> request) {
         switch (intent) {
             case BANK_ADD:
                 return null;
