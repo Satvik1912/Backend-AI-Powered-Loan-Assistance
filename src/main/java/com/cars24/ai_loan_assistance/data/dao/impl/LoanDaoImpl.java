@@ -102,7 +102,7 @@ public class LoanDaoImpl implements LoanDao {
 
         // Convert each loan into LoanInfo object and store in response
         List<LoanInfo> loanDetails = activeLoans.stream()
-                .map(loan -> new LoanInfo(loan.getDisbursedDate(), loan.getType()))
+                .map(loan -> new LoanInfo(loan.getLoanId(), loan.getDisbursedDate(), loan.getType()))
                 .toList();
 
         response.setLoans(loanDetails);
