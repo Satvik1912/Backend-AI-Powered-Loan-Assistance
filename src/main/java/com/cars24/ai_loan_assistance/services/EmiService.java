@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface EmiService {
 
+    ResponseEntity<ApiResponse> getEmiMenu(String email);
+
     ResponseEntity<ApiResponse> getNextEmiDueDate(String email);
 
     ResponseEntity<ApiResponse> getEmiAmount(String email);

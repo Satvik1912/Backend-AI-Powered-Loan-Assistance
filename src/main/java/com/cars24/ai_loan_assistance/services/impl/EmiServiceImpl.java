@@ -5,11 +5,12 @@ import com.cars24.ai_loan_assistance.data.repositories.EmiRepository;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.EmiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmiServiceImpl implements EmiService {
@@ -18,6 +19,38 @@ public class EmiServiceImpl implements EmiService {
     private EmiRepository emiRepository;
 
     @Override
+    public ResponseEntity<ApiResponse> getEmiMenu(String email) {
+        List<EmiEntity> emis = emiRepository.findByUserEmail(email);
+
+        if (emis.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse(404, "Sorry, there is no such EMI detail.", "InvalidRequest", false, null)
+            );
+        }
+
+        if (emis.size() == 1) {
+            EmiEntity emi = emis.get(0);
+            Map<String, Object> emiDetail = new HashMap<>();
+            emiDetail.put("status", emi.getStatus());
+            emiDetail.put("emiAmount", emi.getEmiAmount());
+
+            return ResponseEntity.ok(new ApiResponse(200, "You have only one EMI:", "getEmiMenu", true, emiDetail));
+        }
+        List<Map<String, Object>> emiDetails = new ArrayList<>();
+        for (EmiEntity emi : emis) {
+            Map<String, Object> emiMap = new HashMap<>();
+            emiMap.put("status", emi.getStatus());
+            emiMap.put("emiAmount", emi.getEmiAmount());
+            emiDetails.add(emiMap);
+        }
+
+        return ResponseEntity.ok(new ApiResponse(200, "You have multiple EMIs, please choose one:",
+                "getEmiMenu", true, emiDetails));
+    }
+
+
+
+
     public ResponseEntity<ApiResponse> getNextEmiDueDate(String email) {
         Optional<EmiEntity> nextEmi = emiRepository.findByUserEmail(email).stream()
                 .filter(emi -> emi.getStatus().name().equals("PENDING"))
