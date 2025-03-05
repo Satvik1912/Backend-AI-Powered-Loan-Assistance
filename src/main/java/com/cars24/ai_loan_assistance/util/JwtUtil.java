@@ -1,5 +1,6 @@
 package com.cars24.ai_loan_assistance.util;
 
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,19 +27,19 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String email, String userId, String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", userId);
-        claims.put("role", role);
-
+    public String generateToken(String email, String userId, Role role) {
         return Jwts.builder()
-                .setClaims(claims)
+                .setClaims(Map.of(
+                        "id", userId,
+                        "roles", List.of(role.name()) // Store enum as String
+                ))
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean validateToken(String token, String email) {
         return (extractEmail(token).equals(email) && !isTokenExpired(token));

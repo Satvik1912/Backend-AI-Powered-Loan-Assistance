@@ -47,7 +47,7 @@ public class LoanServiceImpl implements LoanService {
             loanStatusEntity.setUser(userExists.get());
             loanStatusEntity.setType(loanRequest.getType());
             loanStatusEntity.setDisbursedDate(loanRequest.getDisbursedDate());
-            loanStatusEntity.setStatus(LoanStatus.valueOf("pending"));
+            loanStatusEntity.setStatus(LoanStatus.valueOf("PENDING"));
 
             LoanEntity savedLoanStatus = loanDao.store(loanStatusEntity);
 
@@ -87,60 +87,9 @@ public class LoanServiceImpl implements LoanService {
         }
     }
 
-//    @Override
-//    public ResponseEntity<ApiResponse> searchLoans(String fieldName, String fieldValue, int page, int size) {
-//        try {
-//            List<LoanEntity> loansExists = loanDao.searchByField(fieldName, fieldValue, 0, 1);
-//
-//            if (loansExists.isEmpty()) {
-//                throw new RuntimeException("No loan records found for " + fieldName + " = " + fieldValue);
-//            }
-//            List<LoanEntity> loans = loanDao.searchByField(fieldName, fieldValue, page, size);
-//            List<Map<String, Object>> responseData = loans.stream().map(loan -> {
-//                Map<String, Object> loanData = new HashMap<>();
-//                loanData.put("loanId", loan.getLId());
-//                loanData.put("userId", loan.getUserId());
-//                loanData.put("loanType", loan.getLoanType());
-//                loanData.put("loanAmount", loan.getLoanAmount());
-//                loanData.put("disbursalDate", loan.getDisbursalDate());
-//                loanData.put("status", loan.getStatus());
-//                return loanData;
-//            }).collect(Collectors.toList());
-//
-//            ApiResponse response = new ApiResponse(
-//                    HttpStatus.OK.value(),
-//                    "Loan records retrieved successfully",
-//                    "APPUSR-" + HttpStatus.OK.value(),
-//                    true,
-//                    responseData
-//            );
-//
-//            return ResponseEntity.status(HttpStatus.OK).body(response);
-//
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body(new ApiResponse(
-//                            HttpStatus.NOT_FOUND.value(),
-//                            e.getMessage(),
-//                            "APPUSR-" + HttpStatus.NOT_FOUND.value(),
-//                            false,
-//                            new HashMap<>()
-//                    ));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse(
-//                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                            "An error occurred: " + e.getMessage(),
-//                            "APPUSR-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                            false,
-//                            new HashMap<>()
-//                    ));
-//        }
-//    }
-
     @Override
-    public ResponseEntity<ApiResponse> getLoan(long  loan_id) {
-        LoanEntity loanEntity = loanDao.getLoan(loan_id);
+    public ResponseEntity<ApiResponse> getLoan(long  loanId) {
+        LoanEntity loanEntity = loanDao.getLoan(loanId);
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
                 "Loan retrieved successfully",
                 "APPUSR-" + HttpStatus.OK.value(),
@@ -152,7 +101,8 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> getLoans(int page, int limit) {
+    public ResponseEntity<ApiResponse>
+    getLoans(int page, int limit) {
         Page<LoanEntity> loanEntityPage = loanDao.getLoans(page, limit);
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("loans", loanEntityPage.getContent());

@@ -13,7 +13,7 @@ public class LoanDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId
+//    @MapsId
     @OneToOne
     @JoinColumn(name = "loan_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_loan_details_loan"))
     @JsonBackReference("loan-detail")

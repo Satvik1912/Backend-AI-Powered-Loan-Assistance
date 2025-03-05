@@ -2,16 +2,12 @@ package com.cars24.ai_loan_assistance.data.dao.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.BankDetailsDao;
 import com.cars24.ai_loan_assistance.data.dto.BankInfoDTO;
-import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
 import com.cars24.ai_loan_assistance.data.entities.BankEntity;
-import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
-import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.BankDetailsRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
-import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
 import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,27 +49,9 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
 
     }
 
-    @Override
-    public GetBankDetailsRespUID getbankdetailsofid(GetBankDetailsOfUser getBankDetailsOfUser) {
 
-        System.out.println(getBankDetailsOfUser.getUid());
-//       BankDetailsEntity user =  bankDetailsRepository.getByUid(getBankDetailsOfUser.getUid());
-//        System.out.println(user);
-//       getBankDetailsRespUID.setBank_name(user.getBank_name());
-//
-//       getBankDetailsRespUID.setBank_acc_type(user.getBank_acc_type());
-//       getBankDetailsRespUID.setAccount_no(user.getAccount_no());
-//       getBankDetailsRespUID.setIfsc_code(user.getIfsc_code());
-//       getBankDetailsRespUID.setFull_name(user.getFull_name());
-//       return getBankDetailsRespUID;
-        return null;
-    }
 
-    @Override
-    public List<BankDetailsEntity> getAllBankDetails() {
-//        return bankDetailsRepository.findAll()   ;
-        return null;
-    }
+
 
     @Override
     public CountBankAcc countofbanks(String email) {

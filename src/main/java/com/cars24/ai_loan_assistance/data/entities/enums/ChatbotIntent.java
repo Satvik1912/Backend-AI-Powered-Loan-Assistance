@@ -13,5 +13,7 @@ public enum ChatbotIntent {
     BANK_LINKED_DETAILS,
     BANK_VIEW_SALARY,
     BANK_UPDATE_SALARY,
-    BANK_CIBIL
+    BANK_CIBIL,
+    EMI_DETAILS
+
 }

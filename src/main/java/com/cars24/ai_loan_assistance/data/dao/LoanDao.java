@@ -13,7 +13,6 @@ public interface LoanDao {
     LoanEntity store(LoanEntity loan);
     LoanEntity getLoan(long loan_id);
     Page<LoanEntity> getLoans(int page, int limit);
-//    List<LoanEntity> searchByField(String fieldName, String fieldValue, int page, int size);
     ActiveLoansResponse getActiveLoans(String email);
     GetLoansResponse getLoansByUser(String email);
 }
