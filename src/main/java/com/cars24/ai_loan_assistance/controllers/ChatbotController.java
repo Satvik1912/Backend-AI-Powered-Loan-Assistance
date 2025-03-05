@@ -7,10 +7,7 @@ import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.UserInformationService;
-import com.cars24.ai_loan_assistance.services.impl.AccountServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.BankDetailsServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.EmiServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
+import com.cars24.ai_loan_assistance.services.impl.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +27,7 @@ public class ChatbotController {
     private final LoanServiceImpl loanService;
     private final UserInformationService userInformationService;
     private final BankDetailsServiceImpl bankDetailsService;
-    private final LoanServiceImpl loanDetailService;
+    private final LoanDetailServiceImpl loanDetailService;
     private final EmiServiceImpl emiServiceimpl;
 
     @GetMapping("/query")
