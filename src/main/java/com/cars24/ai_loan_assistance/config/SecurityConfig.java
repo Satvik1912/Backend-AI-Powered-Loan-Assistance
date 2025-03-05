@@ -1,5 +1,6 @@
 package com.cars24.ai_loan_assistance.config;
 
+import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +28,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/admin/**","/api/user/loans","/api/user/loan/{id}").hasRole("ADMIN")  // Admin endpoints
-                        .requestMatchers("/api/user/create","/api/user/loan/{id}").hasRole("USER")    // User endpoints
+                        .requestMatchers("/api/user/loans").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/user/loan/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/api/user/create").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
                         .anyRequest().authenticated()
                 )
@@ -37,10 +39,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-//        return configuration.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

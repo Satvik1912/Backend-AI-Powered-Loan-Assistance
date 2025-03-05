@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface LoanService {
     ResponseEntity<ApiResponse> createLoan(LoanRequest loanRequest);
-    ResponseEntity<ApiResponse> getLoan(long loan_id);
+    ResponseEntity<ApiResponse> getLoan(long loanId);
     ResponseEntity<ApiResponse> getLoans(int page, int limit);
-//    ResponseEntity<ApiResponse> searchLoans(String loanFieldName, String loanFieldValue, int page, int size);
     ResponseEntity<ApiResponse> getActiveLoans(String email);
     ResponseEntity<ApiResponse> getLoansByUser(String email);
 }

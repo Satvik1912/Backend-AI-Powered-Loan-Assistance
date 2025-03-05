@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity,Long> {
-//    LoanEntity findByUserId(long user_id);
+    Optional<LoanEntity> findById(Long loanId);
     List<LoanEntity> findByUserIdAndStatus(long userId, LoanStatus status);
     List<LoanEntity> findByUserId(long userId);
 }

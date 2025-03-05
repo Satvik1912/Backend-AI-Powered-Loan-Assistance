@@ -47,7 +47,7 @@ public class LoanServiceImpl implements LoanService {
             loanStatusEntity.setUser(userExists.get());
             loanStatusEntity.setType(loanRequest.getType());
             loanStatusEntity.setDisbursedDate(loanRequest.getDisbursedDate());
-            loanStatusEntity.setStatus(LoanStatus.valueOf("pending"));
+            loanStatusEntity.setStatus(LoanStatus.valueOf("PENDING"));
 
             LoanEntity savedLoanStatus = loanDao.store(loanStatusEntity);
 
@@ -88,8 +88,8 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> getLoan(long  loan_id) {
-        LoanEntity loanEntity = loanDao.getLoan(loan_id);
+    public ResponseEntity<ApiResponse> getLoan(long  loanId) {
+        LoanEntity loanEntity = loanDao.getLoan(loanId);
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),
                 "Loan retrieved successfully",
                 "APPUSR-" + HttpStatus.OK.value(),

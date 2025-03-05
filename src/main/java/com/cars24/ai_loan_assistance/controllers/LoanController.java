@@ -18,17 +18,16 @@ public class LoanController {
 
 //    private final LoanServiceImpl loanService;
     private final LoanService loanService;
-
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody LoanRequest loanRequest) {
         return loanService.createLoan(loanRequest);
     }
 
-    @GetMapping("/loan/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') and hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse> getLoan(@Valid @PathVariable("id") long loan_id){
-        return loanService.getLoan(loan_id);
+    @GetMapping("/loan/{loanId}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse> getLoan(@Valid @PathVariable long loanId){
+        return loanService.getLoan(loanId);
     }
 
     @GetMapping("/loans")

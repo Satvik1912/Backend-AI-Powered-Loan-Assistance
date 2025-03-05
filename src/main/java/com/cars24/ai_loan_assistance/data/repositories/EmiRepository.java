@@ -11,5 +11,10 @@ import java.util.List;
 public interface EmiRepository extends JpaRepository<EmiEntity, Long> {
     @Query("SELECT e FROM EmiEntity e WHERE e.loan.user.email = :email")
     List<EmiEntity> findByUserEmail(@Param("email") String email);
-}
+
+    @Query("SELECT e FROM EmiEntity e WHERE e.loan.loanId = :loanId")
+    List<EmiEntity> findEmisByLoanId(@Param("loanId") Long loanId);
+    }
+
+
 

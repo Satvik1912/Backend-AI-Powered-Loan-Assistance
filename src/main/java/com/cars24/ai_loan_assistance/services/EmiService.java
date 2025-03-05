@@ -8,17 +8,8 @@ import java.util.List;
 
 public interface EmiService {
 
-    ResponseEntity<ApiResponse> getEmiMenu(String email);
 
-    ResponseEntity<ApiResponse> getNextEmiDueDate(String email);
 
-    ResponseEntity<ApiResponse> getEmiAmount(String email);
 
-    ResponseEntity<ApiResponse> getEmiStatus(String email);
-
-    ResponseEntity<ApiResponse> checkMissedPayments(String email);
-
-    ResponseEntity<ApiResponse> getLateFee(String email);
-
-    ResponseEntity<ApiResponse> getCompleteEmiSchedule(String email);
+    ResponseEntity<ApiResponse> getEmiDetails(String email, Long loanId);
 }

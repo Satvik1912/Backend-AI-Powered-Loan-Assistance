@@ -4,11 +4,8 @@ import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
 import com.cars24.ai_loan_assistance.data.requests.ContactUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
-import com.cars24.ai_loan_assistance.services.ChatbotService;
 import com.cars24.ai_loan_assistance.services.UserInformationService;
-import com.cars24.ai_loan_assistance.services.impl.AccountServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.BankDetailsServiceImpl;
-import com.cars24.ai_loan_assistance.services.impl.LoanServiceImpl;
+import com.cars24.ai_loan_assistance.services.impl.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,8 @@ public class ChatbotController {
     private final LoanServiceImpl loanService;
     private final UserInformationService userInformationService;
     private final BankDetailsServiceImpl bankDetailsService;
+    private final EmiServiceImpl emiServiceimpl;
+    private final LoanDetailServiceImpl loanDetailService;
 
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(@RequestParam String email, @RequestParam ChatbotIntent intent, @RequestParam(defaultValue = "0") Long additional) {
@@ -42,8 +41,10 @@ public class ChatbotController {
                 return loanService.getActiveLoans(email);
 
             case LOAN_ACTIVE_DETAILS:
-            case BANK_LINKED_NUMBER:
-            case BANK_LINKED_DETAILS:
+                return loanDetailService.getActiveLoans(email);
+
+//            case BANK_LINKED_NUMBER:
+            case BANK_LINKED_NUMBER,BANK_LINKED_DETAILS:
                 return ResponseEntity.ok(new ApiResponse(
                         HttpStatus.BAD_REQUEST.value(),
                         "Feature not implemented yet.",
@@ -61,6 +62,8 @@ public class ChatbotController {
             case BANK_CIBIL:
                 return userInformationService.getCibil(email);
 
+            case EMI_DETAILS:
+                return emiServiceimpl.getEmiDetails(email, additional);
             default:
                 return ResponseEntity.badRequest().body(new ApiResponse(
                         HttpStatus.BAD_REQUEST.value(),
