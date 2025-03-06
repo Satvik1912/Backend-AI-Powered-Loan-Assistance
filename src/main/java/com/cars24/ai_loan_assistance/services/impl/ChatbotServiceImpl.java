@@ -1,11 +1,16 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
+import com.cars24.ai_loan_assistance.data.dao.AccountDao;
+import com.cars24.ai_loan_assistance.data.dao.BankDetailsDao;
+import com.cars24.ai_loan_assistance.data.dao.LoanDao;
+import com.cars24.ai_loan_assistance.data.dao.UserInformationDao;
 import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
+import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.ContactUpdateRequest;
+import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
 import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.ChatbotService;
-import com.cars24.ai_loan_assistance.services.UserInformationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,41 +23,44 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ChatbotServiceImpl implements ChatbotService {
-    private final AccountServiceImpl accountService;
-    private final LoanServiceImpl loanService;
-    private final UserInformationService userInformationService;
-    private final BankDetailsServiceImpl bankDetailsService;
+    private final AccountDao accountDao;
+    private final LoanDao loanDao;
+    private final UserInformationDao userInformationDao;
+    private final BankDetailsDao bankDetailsDao;
+    private final EmiServiceImpl emiServiceimpl;
+
     @Override
-    public ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional) {
+    public Object processQuery(String email, ChatbotIntent intent, Long additional) {
         switch (intent) {
             case ACC_PROFILE:
-                return accountService.getUserProfile(email);
+                return accountDao.getUserProfile(email);
 
             case ACC_KYC:
-                return accountService.getKycDetails(email);
+                return accountDao.getKycDetails(email);
 
             case LOAN_ACTIVE_NUMBER:
-                return loanService.getActiveLoans(email);
+                return loanDao.getActiveLoans(email);
 
             case LOAN_ACTIVE_DETAILS:
+                return loanDao.getActiveLoansDetails(email, additional);
+
             case BANK_LINKED_NUMBER:
+                return bankDetailsDao.countofbanks(email);
+
             case BANK_LINKED_DETAILS:
-                return ResponseEntity.ok(new ApiResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Feature not implemented yet.",
-                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                        false,
-                        null
-                ));
+                return bankDetailsDao.bankfulldetails(email,additional);
 
             case LOAN_STATUS:
-                return loanService.getLoansByUser(email);
+                return loanDao.getLoansByUser(email);
 
-            case BANK_VIEW_SALARY:
-                return userInformationService.getSalaryDetails(email);
+            case ACC_VIEW_SALARY:
+                return userInformationDao.getSalaryDetails(email);
 
-            case BANK_CIBIL:
-                return userInformationService.getCibil(email);
+            case ACC_CIBIL:
+                return userInformationDao.getCibil(email);
+
+            case LOAN_EMI_DETAILS:
+                return emiServiceimpl.getEmiDetails(email, additional);
 
             default:
                 return ResponseEntity.badRequest().body(new ApiResponse(
@@ -67,30 +75,36 @@ public class ChatbotServiceImpl implements ChatbotService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> processUpdate(String email, ChatbotIntent intent, Map<String, Object> request) {
+    public String processUpdate(String email, ChatbotIntent intent, Map<String, Object> request, Long additional) {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case ACC_CONTACT:
                 ContactUpdateRequest contactUpdateRequest = objectMapper.convertValue(request, ContactUpdateRequest.class);
-                return accountService.updateContactInfo(email, contactUpdateRequest);
+                return accountDao.updateContactInfo(email, contactUpdateRequest);
+
             case BANK_UPDATE:
-                return null;
-            case BANK_UPDATE_SALARY:
+                BankDetailsUpdateRequest bankDetailsUpdateRequest =  objectMapper.convertValue(request, BankDetailsUpdateRequest.class);
+                return bankDetailsDao.updatebankdetails(email,bankDetailsUpdateRequest, additional);
+
+            case ACC_UPDATE_SALARY:
                 SalaryUpdateRequest salaryUpdateRequest = objectMapper.convertValue(request, SalaryUpdateRequest.class);
-                return userInformationService.updateSalaryDetails(email, salaryUpdateRequest);
+                return userInformationDao.updateSalaryDetails(email, salaryUpdateRequest);
 
             default:
-                return null;
+                return "INVALID PROMPT!";
         }
     }
 
     @Override
-    public ResponseEntity<ApiResponse> processCreate(String email, ChatbotIntent intent, Map<String, Object> request) {
+    public String processCreate(String email, ChatbotIntent intent, Map<String, Object> request) {
+        ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case BANK_ADD:
-                return null;
+                CreateBankDetails createBankDetails =  objectMapper.convertValue(request, CreateBankDetails.class);
+                return bankDetailsDao.createBankDetails(email,createBankDetails);
+
             default:
-                return null;
+                return "INVALID PROMPT!";
         }
     }
 }

@@ -1,17 +1,14 @@
 package com.cars24.ai_loan_assistance.data.dao;
 
-import com.cars24.ai_loan_assistance.data.entities.BankDetailsEntity;
+import com.cars24.ai_loan_assistance.data.requests.BankDetailsUpdateRequest;
 import com.cars24.ai_loan_assistance.data.requests.CreateBankDetails;
-import com.cars24.ai_loan_assistance.data.requests.GetBankDetailsOfUser;
-import com.cars24.ai_loan_assistance.data.responses.GetBankDetailsRespUID;
-import org.springframework.http.ResponseEntity;
+import com.cars24.ai_loan_assistance.data.responses.*;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface BankDetailsDao {
-    public String createBankDetails(CreateBankDetails createBankDetails);
-    public GetBankDetailsRespUID getbankdetailsofid(GetBankDetailsOfUser getBankDetailsOfUser);
-    public List<BankDetailsEntity> getAllBankDetails();
+    String createBankDetails(String email ,CreateBankDetails createBankDetails);
+    CountBankAcc countofbanks(String email);
+    BankFullDetails bankfulldetails(String email , long bankid);
+    String  updatebankdetails(String email , BankDetailsUpdateRequest request, long additional);
 }

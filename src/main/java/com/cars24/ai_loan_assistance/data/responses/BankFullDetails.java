@@ -1,14 +1,12 @@
-package com.cars24.ai_loan_assistance.data.requests;
+package com.cars24.ai_loan_assistance.data.responses;
 
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.BankAccountType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.stereotype.Service;
 
 @Data
-public class CreateBankDetails {
+public class BankFullDetails {
+//    private UserEntity user;
 
     private String accountNumber;
 
@@ -19,6 +17,4 @@ public class CreateBankDetails {
     private String bankName;
 
     private BankAccountType bankAccountType;
-
-
 }

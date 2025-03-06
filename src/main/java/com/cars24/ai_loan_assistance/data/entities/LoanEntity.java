@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "loans")
+@Table(name = "loan")
 public class LoanEntity {
 
     @Id
@@ -21,15 +21,10 @@ public class LoanEntity {
     @Column(name = "loan_id")
     private Long loanId;
 
-
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_loans_user"))
+    @JoinColumn(name = "user_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_loan_user"))
     @JsonBackReference("user-loans")
     private UserEntity user;
-
-    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL)
-    @JsonManagedReference("loan-detail")
-    private LoanDetailEntity loanDetail;
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
     @JsonManagedReference("loan-emis")
@@ -37,7 +32,7 @@ public class LoanEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private LoanStatus status = LoanStatus.PENDING;
+    private LoanStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -46,6 +41,12 @@ public class LoanEntity {
     @Column(name = "disbursed_date")
     private LocalDate disbursedDate;
 
-    @Column(name = "amount_left")
-    private Double amountLeft;
+    @Column(name = "principal", nullable = false)
+    private Double principal;
+
+    @Column(name = "tenure", nullable = false)
+    private Double tenure;
+
+    @Column(name = "interest", nullable = false)
+    private Double interest;
 }

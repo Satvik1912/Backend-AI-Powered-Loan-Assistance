@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface ChatbotService {
-    ResponseEntity<ApiResponse> processQuery(String email, ChatbotIntent intent, String additional);
-    ResponseEntity<ApiResponse> processUpdate(String email, ChatbotIntent intent, Map<String, Object> request);
-    ResponseEntity<ApiResponse> processCreate(String email, ChatbotIntent intent, Map<String, Object> request);
+    Object processQuery(String email, ChatbotIntent intent, Long additional);
+    String processUpdate(String email, ChatbotIntent intent, Map<String, Object> request, Long additional);
+    String processCreate(String email, ChatbotIntent intent, Map<String, Object> request);
 }

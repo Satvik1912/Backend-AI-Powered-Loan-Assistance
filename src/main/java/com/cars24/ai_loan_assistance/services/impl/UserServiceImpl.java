@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
                 Role role = userEntity.getRole();
                 String name = userEntity.getName();
 
-                String token = jwtUtil.generateToken(user.getEmail(), id, String.valueOf(role));
+                String token = jwtUtil.generateToken(user.getEmail(), id, (role));
 
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("token", token);

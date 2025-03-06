@@ -6,10 +6,7 @@ import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
-import com.cars24.ai_loan_assistance.data.responses.ActiveLoansResponse;
-import com.cars24.ai_loan_assistance.data.responses.GetLoansResponse;
-import com.cars24.ai_loan_assistance.data.responses.LoanInfo;
-import com.cars24.ai_loan_assistance.data.responses.LoanStatusInfo;
+import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,54 +29,9 @@ public class LoanDaoImpl implements LoanDao {
         return loan;
     }
 
-//    @Override
-//    public List<LoanEntity> searchByField(String fieldName, String fieldValue, int page, int size) {
-//        Query query = new Query();
-//
-//        if ("loanAmount".equals(fieldName)) {
-//            String trimmedValue = fieldValue.trim();
-//            try {
-//                // Allow optional whitespace around hyphen for range
-//                Pattern rangePattern = Pattern.compile("^(\\s*\\d+(\\.\\d+)?\\s*-\\s*\\d+(\\.\\d+)?\\s*)$");
-//                Matcher rangeMatcher = rangePattern.matcher(trimmedValue);
-//                if (rangeMatcher.matches()) {
-//                    String[] parts = trimmedValue.split("\\s*-\\s*");
-//                    double lower = Double.parseDouble(parts[0].trim());
-//                    double upper = Double.parseDouble(parts[1].trim());
-//                    query.addCriteria(Criteria.where("loanAmount").gte(lower).lte(upper));
-//                }
-//                // Check for ">" operator
-//                else if (trimmedValue.startsWith(">")) {
-//                    String valueStr = trimmedValue.substring(1).trim();
-//                    double value = Double.parseDouble(valueStr);
-//                    query.addCriteria(Criteria.where("loanAmount").gt(value));
-//                }
-//                // Check for "<" operator
-//                else if (trimmedValue.startsWith("<")) {
-//                    String valueStr = trimmedValue.substring(1).trim();
-//                    double value = Double.parseDouble(valueStr);
-//                    query.addCriteria(Criteria.where("loanAmount").lt(value));
-//                }
-//                // Exact match
-//                else {
-//                    double value = Double.parseDouble(trimmedValue);
-//                    query.addCriteria(Criteria.where("loanAmount").is(value));
-//                }
-//            } catch (NumberFormatException e) {
-//                throw new IllegalArgumentException("Invalid loanAmount format: " + fieldValue, e);
-//            }
-//        } else {
-//            query.addCriteria(Criteria.where(fieldName).is(fieldValue));
-//        }
-//
-//        // Pagination
-//        query.skip((long) page * size).limit(size);
-//        return mongoTemplate.find(query, LoanEntity.class);
-//    }
-
     @Override
-    public LoanEntity getLoan(long  loan_id) {
-        return loanRepository.findById(loan_id)
+    public LoanEntity getLoan(long  loanId) {
+        return loanRepository.findById(loanId)
                 .orElseThrow(()->new NotFoundException("Loan does not exist"));
     }
 
@@ -93,7 +45,6 @@ public class LoanDaoImpl implements LoanDao {
     public ActiveLoansResponse getActiveLoans(String email) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
-        // Fetch active loans (only those with status DISBURSED)
         List<LoanEntity> activeLoans = loanRepository.findByUserIdAndStatus(user.getId(), LoanStatus.DISBURSED);
 
         // Prepare response
@@ -130,5 +81,20 @@ public class LoanDaoImpl implements LoanDao {
         response.setLoans(loanStatusList);
 
         return response;
+    }
+
+    @Override
+    public ActiveLoansDetailsResponse getActiveLoansDetails(String email, Long additional) {
+        LoanEntity activeLoanDetail = loanRepository.getLoanDetailsByEmail(email, additional);
+        ActiveLoansDetailsResponse loansDetailsResponse = new ActiveLoansDetailsResponse();
+        loansDetailsResponse.setLoanId(activeLoanDetail.getLoanId());
+        loansDetailsResponse.setLoanStatus(activeLoanDetail.getStatus());
+        loansDetailsResponse.setLoanType(activeLoanDetail.getType());
+        loansDetailsResponse.setPrincipal(activeLoanDetail.getPrincipal());
+        loansDetailsResponse.setInterest(activeLoanDetail.getInterest());
+        loansDetailsResponse.setTenure(activeLoanDetail.getTenure());
+        loansDetailsResponse.setDisbursedDate(activeLoanDetail.getDisbursedDate());
+
+        return loansDetailsResponse;
     }
 }
