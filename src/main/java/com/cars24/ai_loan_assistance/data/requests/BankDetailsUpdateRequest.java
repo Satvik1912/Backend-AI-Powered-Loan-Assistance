@@ -11,6 +11,4 @@ public class BankDetailsUpdateRequest {
     private BankAccountType bankAccountType;
 
     private String accountHolderName;
-
-    private Long bankId;
 }
