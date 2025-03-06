@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -19,13 +20,45 @@ import java.util.Objects;
 public class UserBotServiceImpl implements UserBotService {
     private final UserBotRepository userBotRepository;
     private final ChatbotServiceImpl chatbotService;
-    @Override
-    public UserBotResponse interact(int prompt_id, String email, Long additional) {
-        UserBot userBot = userBotRepository.findByPromptId(prompt_id);
 
-        if (userBot == null){
-            throw new NotFoundException("PromptID does not exist!");
-        }
+    @Override
+    public UserBotResponse interact(int promptId, String email, Long additional) {
+        return processUserBotRequest(promptId, () -> {
+            if (additional != null) {
+                return chatbotService.processQuery(email, getUserBot(promptId).getIntent(), additional);
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public UserBotResponse update(int promptId, String email, Map<String, Object> request, Long additional) {
+        return processUserBotRequest(promptId, () -> {
+            if (request != null) {
+                return chatbotService.processUpdate(email, getUserBot(promptId).getIntent(), request, additional);
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public UserBotResponse create(int promptId, String email, Map<String, Object> request) {
+        return processUserBotRequest(promptId, () -> {
+            if (request != null) {
+                return chatbotService.processCreate(email, getUserBot(promptId).getIntent(), request);
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Common method to process UserBot requests and create responses
+     * @param promptId the prompt ID to look up
+     * @param actionSupplier supplier function for the specific action to perform
+     * @return standardized UserBotResponse
+     */
+    private UserBotResponse processUserBotRequest(int promptId, Supplier<Object> actionSupplier) {
+        UserBot userBot = getUserBot(promptId);
 
         List<UserBot> followUpBots = userBot.getFollowups().stream()
                 .map(userBotRepository::findByPromptId)
@@ -33,52 +66,24 @@ public class UserBotServiceImpl implements UserBotService {
                 .toList();
 
         Object extraAction = null;
-        if(userBot.getIntent() != null){
-            extraAction = chatbotService.processQuery(email, userBot.getIntent(), additional);
+        if (userBot.getIntent() != null) {
+            extraAction = actionSupplier.get();
         }
 
         return new UserBotResponse(userBot, followUpBots, extraAction);
     }
 
-    @Override
-    public UserBotResponse update(int prompt_id, String email, Map<String, Object> request, Long additional) {
-        UserBot userBot = userBotRepository.findByPromptId(prompt_id);
-
-        if (userBot == null){
+    /**
+     * Helper method to get a UserBot by promptId and throw a standardized exception if not found
+     * @param promptId the prompt ID to look up
+     * @return the UserBot
+     * @throws NotFoundException if the promptId doesn't exist
+     */
+    private UserBot getUserBot(int promptId) {
+        UserBot userBot = userBotRepository.findByPromptId(promptId);
+        if (userBot == null) {
             throw new NotFoundException("PromptID does not exist!");
         }
-
-        List<UserBot> followUpBots = userBot.getFollowups().stream()
-                .map(userBotRepository::findByPromptId)
-                .filter(Objects::nonNull)
-                .toList();
-
-        Object extraAction = null;
-        if(userBot.getIntent() != null){
-            extraAction = chatbotService.processUpdate(email, userBot.getIntent(), request, additional);
-        }
-
-        return new UserBotResponse(userBot, followUpBots, extraAction);
-    }
-
-    @Override
-    public UserBotResponse create(int prompt_id, String email, Map<String, Object> request) {
-        UserBot userBot = userBotRepository.findByPromptId(prompt_id);
-
-        if (userBot == null){
-            throw new NotFoundException("PromptID does not exist!");
-        }
-
-        List<UserBot> followUpBots = userBot.getFollowups().stream()
-                .map(userBotRepository::findByPromptId)
-                .filter(Objects::nonNull)
-                .toList();
-
-        Object extraAction = null;
-        if(userBot.getIntent() != null){
-            extraAction = chatbotService.processCreate(email, userBot.getIntent(), request);
-        }
-
-        return new UserBotResponse(userBot, followUpBots, extraAction);
+        return userBot;
     }
 }

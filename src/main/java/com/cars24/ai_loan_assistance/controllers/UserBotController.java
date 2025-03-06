@@ -4,6 +4,7 @@ import com.cars24.ai_loan_assistance.data.entities.enums.ChatbotIntent;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.data.responses.UserBotResponse;
 import com.cars24.ai_loan_assistance.services.UserBotService;
+import com.cars24.ai_loan_assistance.services.impl.UserBotServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import java.util.Map;
 @Validated
 public class UserBotController {
 
-    private final UserBotService userBotService;
+    private final UserBotServiceImpl userBotService;
 
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(@RequestParam int prompt_id, @RequestParam String email, @RequestParam(defaultValue = "0") Long additional){
