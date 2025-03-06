@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class BankFullDetails {
-    private UserEntity user;
+//    private UserEntity user;
 
     private String accountNumber;
 

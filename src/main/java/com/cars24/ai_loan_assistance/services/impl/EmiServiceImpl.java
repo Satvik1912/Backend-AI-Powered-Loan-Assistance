@@ -22,12 +22,12 @@ public class EmiServiceImpl implements EmiService {
     private EmiRepository emiRepository;
 
     @Override
-    public ResponseEntity<ApiResponse> getEmiDetails(String email, Long loanId) {
+    public Object getEmiDetails(String email, Long loanId) {
         List<EmiEntity> emis = emiRepository. findEmisByLoanId(loanId);
 
         if (emis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(404, "No EMI details found for this loan.", "EMI_DETAILS", false, null));
+                    .body(new ApiResponse(404, "No EMI details found for this loan.", "LOAN_EMI_DETAILS", false, null));
         }
 
         List<EmiEntity> lastPaid = emis.stream()
@@ -44,13 +44,11 @@ public class EmiServiceImpl implements EmiService {
                 .filter(emi -> emi.getStatus() == EmiStatus.OVERDUE)
                 .toList();
 
-        Map<String, Object> emiDetails = Map.of(
+        return Map.<String, Object>of(
                 "lastPaid", lastPaid,
                 "pending", pending,
                 "overdue", overdue
         );
-
-        return ResponseEntity.ok(new ApiResponse(200, "EMI details fetched successfully", "EMI_DETAILS", true, emiDetails));
     }
 
 

@@ -35,7 +35,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public void updateContactInfo(String email, ContactUpdateRequest request) {
+    public String updateContactInfo(String email, ContactUpdateRequest request) {
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
@@ -46,6 +46,7 @@ public class AccountDaoImpl implements AccountDao {
             userEntity.setAddress(request.getAddress());
         }
         userRepository.save(userEntity);
+        return "Contact details updated successfully!";
     }
 
     @Override

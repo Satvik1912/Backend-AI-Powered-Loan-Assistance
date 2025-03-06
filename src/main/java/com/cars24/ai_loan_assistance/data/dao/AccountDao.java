@@ -9,6 +9,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface AccountDao {
     UserProfileResponse getUserProfile(String email);
-    void updateContactInfo(String email, ContactUpdateRequest request);
+    String updateContactInfo(String email, ContactUpdateRequest request);
     KycResponse getKycDetails(String email);
 }

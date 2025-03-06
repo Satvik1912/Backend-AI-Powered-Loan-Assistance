@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @Data
 public class CreateBankDetails {
 
-    private UserEntity user;
-
     private String accountNumber;
 
     private String accountHolderName;
