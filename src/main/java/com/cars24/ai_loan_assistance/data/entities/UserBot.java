@@ -19,4 +19,5 @@ public class UserBot {
     private List<Integer> followups;
     private String text;
     private ChatbotIntent intent;
+    private String responseText;
 }
