@@ -21,7 +21,7 @@ public class LoanEntity {
     @Column(name = "loan_id")
     private Long loanId;
 
-//    @MapsId
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_loan_user"))
     @JsonBackReference("user-loans")

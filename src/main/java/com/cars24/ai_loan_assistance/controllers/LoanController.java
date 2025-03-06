@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoanController {
 
-//    private final LoanServiceImpl loanService;
     private final LoanService loanService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_USER') and !hasRole('ROLE_ADMIN')")
