@@ -30,6 +30,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     GetBankDetailsRespUID getBankDetailsRespUID = new GetBankDetailsRespUID();
     @Override
     public String createBankDetails(String email , CreateBankDetails createBankDetails) {
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         BankEntity bankEntity = new BankEntity();
 
@@ -38,7 +40,7 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
 
         bankEntity.setBankAccountType(createBankDetails.getBankAccountType());
         bankEntity.setAccountNumber(createBankDetails.getAccountNumber());
-        bankEntity.setUser(createBankDetails.getUser());
+        bankEntity.setUser(userEntity);
         bankEntity.setIfscCode(createBankDetails.getIfscCode());
         bankEntity.setAccountHolderName(createBankDetails.getAccountHolderName());
         bankDetailsRepository.save(bankEntity);
@@ -75,7 +77,6 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
         BankFullDetails bankFullDetails = new BankFullDetails();
         bankFullDetails.setBankName(bank.getBankName());
-        bankFullDetails.setUser(bank.getUser());
         bankFullDetails.setBankAccountType(bank.getBankAccountType());
         bankFullDetails.setIfscCode(bank.getIfscCode());
         bankFullDetails.setAccountNumber(bank.getAccountNumber());
@@ -85,11 +86,11 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     }
 
     @Override
-    public UpdateBankDetails updatebankdetails(String email, BankDetailsUpdateRequest request) {
+    public String updatebankdetails(String email, BankDetailsUpdateRequest request, long additional) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
-        BankEntity bank = bankDetailsRepository.findById(request.getBankId())
+        BankEntity bank = bankDetailsRepository.findById(additional)
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
 
         if (!bank.getUser().getId().equals(user.getId())) {
@@ -107,12 +108,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
         }
 
         bankDetailsRepository.save(bank);
-        UpdateBankDetails updateBankDetails = new UpdateBankDetails();
-        updateBankDetails.setBankName(request.getBankName());
-        updateBankDetails.setBankAccountType(request.getBankAccountType());
-        updateBankDetails.setAccountHolderName(request.getAccountHolderName());
 
-        return updateBankDetails;
+        return "Bank details updated successfully!";
     }
 
 }

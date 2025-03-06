@@ -6,10 +6,7 @@ import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.repositories.LoanRepository;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
-import com.cars24.ai_loan_assistance.data.responses.ActiveLoansResponse;
-import com.cars24.ai_loan_assistance.data.responses.GetLoansResponse;
-import com.cars24.ai_loan_assistance.data.responses.LoanInfo;
-import com.cars24.ai_loan_assistance.data.responses.LoanStatusInfo;
+import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -84,5 +81,20 @@ public class LoanDaoImpl implements LoanDao {
         response.setLoans(loanStatusList);
 
         return response;
+    }
+
+    @Override
+    public ActiveLoansDetailsResponse getActiveLoansDetails(String email, Long additional) {
+        LoanEntity activeLoanDetail = loanRepository.getLoanDetailsByEmail(email, additional);
+        ActiveLoansDetailsResponse loansDetailsResponse = new ActiveLoansDetailsResponse();
+        loansDetailsResponse.setLoanId(activeLoanDetail.getLoanId());
+        loansDetailsResponse.setLoanStatus(activeLoanDetail.getStatus());
+        loansDetailsResponse.setLoanType(activeLoanDetail.getType());
+        loansDetailsResponse.setPrincipal(activeLoanDetail.getPrincipal());
+        loansDetailsResponse.setInterest(activeLoanDetail.getInterest());
+        loansDetailsResponse.setTenure(activeLoanDetail.getTenure());
+        loansDetailsResponse.setDisbursedDate(activeLoanDetail.getDisbursedDate());
+
+        return loansDetailsResponse;
     }
 }

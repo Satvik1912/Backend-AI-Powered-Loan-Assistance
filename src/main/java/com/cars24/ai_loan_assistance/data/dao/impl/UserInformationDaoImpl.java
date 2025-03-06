@@ -32,7 +32,7 @@ public class UserInformationDaoImpl implements UserInformationDao {
     }
 
     @Override
-    public void updateSalaryDetails(String email, SalaryUpdateRequest request) {
+    public String updateSalaryDetails(String email, SalaryUpdateRequest request) {
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(userEntity.getId())
@@ -45,6 +45,7 @@ public class UserInformationDaoImpl implements UserInformationDao {
             userInformationEntity.setIncomeType(request.getIncomeType());
         }
         userInformationRepository.save(userInformationEntity);
+        return "Your salary details have been updated successfully!";
     }
 
     @Override
