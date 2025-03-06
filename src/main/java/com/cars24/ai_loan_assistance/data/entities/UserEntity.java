@@ -4,6 +4,8 @@ import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ public class UserEntity {
     private String name;
 
     @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
     @Column(name = "phone_number", unique = true, nullable = false)
@@ -49,7 +53,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private Role role = Role.USER;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
