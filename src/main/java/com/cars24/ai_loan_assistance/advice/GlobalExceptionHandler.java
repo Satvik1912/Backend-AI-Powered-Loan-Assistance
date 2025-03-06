@@ -23,16 +23,24 @@ public class    GlobalExceptionHandler {
             errorMap.put(error.getField(),error.getDefaultMessage());
         });
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(),"ERROR: INVALID DATA!", "APP_USER - " + HttpStatus.BAD_REQUEST.value(), false, errorMap);
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "ERROR: INVALID DATA!",
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                errorMap);
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public  ResponseEntity<ApiResponse> handleServiceExceptions(NotFoundException exception)
     {
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), "APP_USER - " + HttpStatus.BAD_REQUEST.value(),false,null);
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                null);
         return ResponseEntity.badRequest().body(apiResponse);
-
     }
-
 }

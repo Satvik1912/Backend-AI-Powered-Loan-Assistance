@@ -31,45 +31,28 @@ public class ChatbotController {
 
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(@RequestParam String email, @RequestParam ChatbotIntent intent, @RequestParam(defaultValue = "0") Long additional) {
-        switch (intent) {
-            case ACC_PROFILE:
-                return accountService.getUserProfile(email);
-
-            case ACC_KYC:
-                return accountService.getKycDetails(email);
-
-            case LOAN_ACTIVE_NUMBER:
-                return loanService.getActiveLoans(email);
-
-            case LOAN_ACTIVE_DETAILS:
-            case BANK_LINKED_NUMBER:
-            case BANK_LINKED_DETAILS:
-                return ResponseEntity.ok(new ApiResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Feature not implemented yet.",
-                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                        false,
-                        null
-                ));
-
-            case LOAN_STATUS:
-                return loanService.getLoansByUser(email);
-
-            case BANK_VIEW_SALARY:
-                return userInformationService.getSalaryDetails(email);
-
-            case BANK_CIBIL:
-                return userInformationService.getCibil(email);
-
-            default:
-                return ResponseEntity.badRequest().body(new ApiResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "ERROR: INVALID DATA!",
-                        "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
-                        false,
-                        null
-                ));
-        }
+        return switch (intent) {
+            case ACC_PROFILE -> accountService.getUserProfile(email);
+            case ACC_KYC -> accountService.getKycDetails(email);
+            case LOAN_ACTIVE_NUMBER -> loanService.getActiveLoans(email);
+            case LOAN_ACTIVE_DETAILS, BANK_LINKED_NUMBER, BANK_LINKED_DETAILS -> ResponseEntity.ok(new ApiResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Feature not implemented yet.",
+                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                    false,
+                    null
+            ));
+            case LOAN_STATUS -> loanService.getLoansByUser(email);
+            case BANK_VIEW_SALARY -> userInformationService.getSalaryDetails(email);
+            case BANK_CIBIL -> userInformationService.getCibil(email);
+            default -> ResponseEntity.badRequest().body(new ApiResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "ERROR: INVALID DATA!",
+                    "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                    false,
+                    null
+            ));
+        };
     }
 
     @PutMapping("/update")

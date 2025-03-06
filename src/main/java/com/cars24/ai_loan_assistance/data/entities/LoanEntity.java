@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "loan")
+@Table(name = "loans")
 public class LoanEntity {
 
     @Id
@@ -21,9 +21,9 @@ public class LoanEntity {
     @Column(name = "loan_id")
     private Long loanId;
 
-    @MapsId
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_loan_user"))
+    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_loans_user"))
     @JsonBackReference("user-loans")
     private UserEntity user;
 
@@ -37,7 +37,7 @@ public class LoanEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private LoanStatus status;
+    private LoanStatus status = LoanStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
