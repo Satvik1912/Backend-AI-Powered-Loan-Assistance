@@ -28,10 +28,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/loans").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/user/loan/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/api/user/create").hasAuthority("ROLE_USER")
                         .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
+//                        .requestMatchers("/adminDashboard/**").hasRole("ADMIN")          // Only ADMINs
+//                        .requestMatchers("/home/**").hasRole("USER")                     // Only customers
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
