@@ -53,7 +53,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role = Role.USER;
+    private Role role = Role.ADMIN;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
