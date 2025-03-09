@@ -26,10 +26,7 @@ public class LoanEntity {
     @JoinColumn(name = "user_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_loan_user"))
     @JsonBackReference("user-loans")
     private UserEntity user;
-//
-//    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL)
-//    @JsonManagedReference("loan-detail")
-//    private LoanDetailEntity loanDetail;
+
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
     @JsonManagedReference("loan-emis")

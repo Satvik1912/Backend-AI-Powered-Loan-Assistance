@@ -28,9 +28,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/loans").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/user/loan/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/api/user/create").hasAuthority("ROLE_USER")
+                        .requestMatchers("/api/userbot/query").hasAuthority("ROLE_USER")
+
                         .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
                         .anyRequest().authenticated()
                 )

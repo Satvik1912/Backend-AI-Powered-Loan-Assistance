@@ -14,8 +14,12 @@ import java.util.Optional;
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity,Long> {
     Optional<LoanEntity> findById(Long loanId);
+
     List<LoanEntity> findByUserIdAndStatus(long userId, LoanStatus status);
+
     List<LoanEntity> findByUserId(long userId);
+
     @Query("SELECT l FROM LoanEntity l WHERE l.user.email = :email AND (:loanId IS NULL OR l.loanId = :loanId)")
     LoanEntity getLoanDetailsByEmail(@Param("email") String email, @Param("loanId") Long loanId);
+
 }
