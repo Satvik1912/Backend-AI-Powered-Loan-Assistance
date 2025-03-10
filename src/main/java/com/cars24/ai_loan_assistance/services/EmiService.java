@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface EmiService {
-    Object getEmiDetails(String email, Long loanId);
+    Object getEmiDetails(long userId, Long loanId);
 }

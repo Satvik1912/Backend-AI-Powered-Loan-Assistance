@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface BankDetailsDao {
-    String createBankDetails(String email ,CreateBankDetails createBankDetails);
-    CountBankAcc countofbanks(String email);
-    BankFullDetails bankfulldetails(String email , long bankid);
-    String  updatebankdetails(String email , BankDetailsUpdateRequest request, long additional);
+    String createBankDetails(long userId ,CreateBankDetails createBankDetails);
+    CountBankAcc countofbanks(long userId);
+    BankFullDetails bankfulldetails(long userId , long bankid);
+    String  updatebankdetails(long userId , BankDetailsUpdateRequest request, long additional);
 }

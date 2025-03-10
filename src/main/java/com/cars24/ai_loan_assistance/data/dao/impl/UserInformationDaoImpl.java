@@ -19,8 +19,8 @@ public class UserInformationDaoImpl implements UserInformationDao {
     private final UserInformationRepository userInformationRepository;
 
     @Override
-    public SalaryDetailsResponse getSalaryDetails(String email) {
-        UserEntity user = userRepository.findByEmail(email)
+    public SalaryDetailsResponse getSalaryDetails(long userId) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));
@@ -32,8 +32,8 @@ public class UserInformationDaoImpl implements UserInformationDao {
     }
 
     @Override
-    public String updateSalaryDetails(String email, SalaryUpdateRequest request) {
-        UserEntity userEntity = userRepository.findByEmail(email)
+    public String updateSalaryDetails(long userId, SalaryUpdateRequest request) {
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(userEntity.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));
@@ -49,8 +49,8 @@ public class UserInformationDaoImpl implements UserInformationDao {
     }
 
     @Override
-    public int getCibil(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email)
+    public int getCibil(long userId) {
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(userEntity.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));

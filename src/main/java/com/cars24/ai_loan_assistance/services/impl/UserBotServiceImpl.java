@@ -22,30 +22,29 @@ public class UserBotServiceImpl implements UserBotService {
     private final ChatbotServiceImpl chatbotService;
 
     @Override
-    public UserBotResponse interact(int promptId, String email, Long additional) {
+    public UserBotResponse interact(int promptId, long userId, Long additional) {
+        log.info("userBotService: [userId] {}",userId);
         return processUserBotRequest(promptId, () -> {
-            if (additional != null) {
-                return chatbotService.processQuery(email, getUserBot(promptId).getIntent(), additional);
+                log.info("userBotService: [userId] {}",userId);
+                return chatbotService.processQuery(userId, getUserBot(promptId).getIntent(), additional);
+        });
+    }
+
+    @Override
+    public UserBotResponse update(int promptId, long userId, Map<String, Object> request, Long additional) {
+        return processUserBotRequest(promptId, () -> {
+            if (request != null) {
+                return chatbotService.processUpdate(userId, getUserBot(promptId).getIntent(), request, additional);
             }
             return null;
         });
     }
 
     @Override
-    public UserBotResponse update(int promptId, String email, Map<String, Object> request, Long additional) {
+    public UserBotResponse create(int promptId, long userId, Map<String, Object> request) {
         return processUserBotRequest(promptId, () -> {
             if (request != null) {
-                return chatbotService.processUpdate(email, getUserBot(promptId).getIntent(), request, additional);
-            }
-            return null;
-        });
-    }
-
-    @Override
-    public UserBotResponse create(int promptId, String email, Map<String, Object> request) {
-        return processUserBotRequest(promptId, () -> {
-            if (request != null) {
-                return chatbotService.processCreate(email, getUserBot(promptId).getIntent(), request);
+                return chatbotService.processCreate(userId, getUserBot(promptId).getIntent(), request);
             }
             return null;
         });

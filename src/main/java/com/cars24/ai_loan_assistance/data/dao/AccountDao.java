@@ -8,7 +8,7 @@ import com.cars24.ai_loan_assistance.data.responses.UserProfileResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface AccountDao {
-    UserProfileResponse getUserProfile(String email);
-    String updateContactInfo(String email, ContactUpdateRequest request);
-    KycResponse getKycDetails(String email);
+    UserProfileResponse getUserProfile(long userId);
+    String updateContactInfo(long userId, ContactUpdateRequest request);
+    KycResponse getKycDetails(long userId);
 }

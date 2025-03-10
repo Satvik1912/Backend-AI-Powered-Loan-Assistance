@@ -22,8 +22,8 @@ public class EmiServiceImpl implements EmiService {
     private EmiRepository emiRepository;
 
     @Override
-    public Object getEmiDetails(String email, Long loanId) {
-        List<EmiEntity> emis = emiRepository. findEmisByLoanId(loanId);
+    public Object getEmiDetails(long userId, Long loanId) {
+        List<EmiEntity> emis = emiRepository.findEmisByLoanId(loanId);
 
         if (emis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
