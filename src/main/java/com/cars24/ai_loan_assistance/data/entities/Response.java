@@ -10,7 +10,8 @@ import java.util.Date;
 public class Response {
     @Id
     private String id;
-    private String promptId;
+    private String response_id;
+    private String prompt_id;
     private String text;
     private boolean hasAttachments;
     private Date createdAt;

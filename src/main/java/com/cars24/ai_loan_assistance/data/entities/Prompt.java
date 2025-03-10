@@ -12,6 +12,7 @@ import java.util.List;
 public class Prompt {
     @Id
     private String id;
+    private String prompt_id;
     private String text;
     private String category;
     private int displayOrder;
