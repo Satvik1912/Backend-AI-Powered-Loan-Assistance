@@ -21,8 +21,7 @@ public class PromptServiceImpl implements PromptService {
     @Override
     public List<NextPromptResponse> getInitialPrompts() {
         Query query = new Query(Criteria
-                .where("category").is("main_category")
-                .and("displayOrder").lte(5));
+                .where("category").is("main_category"));
         query.with(Sort.by(Sort.Order.asc("displayOrder")));
         List<Prompt> prompts = mongoTemplate.find(query, Prompt.class);
 
