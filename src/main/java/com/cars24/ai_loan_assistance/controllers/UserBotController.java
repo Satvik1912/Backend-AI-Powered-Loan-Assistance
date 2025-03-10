@@ -30,55 +30,55 @@ public class UserBotController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> handleQuery(
             @RequestParam int prompt_id,
-            @RequestParam String email,
+            @RequestParam long userId,
             @RequestParam(required = false) Long additional,
             Authentication authentication) {
 
-        String loggedInUserEmail = authentication.getName();
-
-        if (!userValidationService.isValidUser(loggedInUserEmail, email, additional)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse(403, "You are not authorized to view this data", "USERBOT_SERVICE", false, null));
-        }
-
-        UserBotResponse userBotResponse = userBotService.interact(prompt_id, email, additional);
+//        String loggedInUserId = authentication.getName();
+//
+//        if (!userValidationService.isValidUser(loggedInUserEmail, userId, additional)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                    .body(new ApiResponse(403, "You are not authorized to view this data", "USERBOT_SERVICE", false, null));
+//        }
+        log.info("userBotController: [userId] {}",userId);
+        UserBotResponse userBotResponse = userBotService.interact(prompt_id, userId, additional);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Prompt retrieved successfully", "USERBOT_SERVICE", true, userBotResponse));
     }
 
     @PutMapping("/query")
     public ResponseEntity<ApiResponse> handleUpdate(
             @RequestParam int prompt_id,
-            @RequestParam String email,
+            @RequestParam long userId,
             @RequestParam(required = false) Long additional,
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        String loggedInUserEmail = authentication.getName();
+//        String loggedInUserEmail = authentication.getName();
+//
+//        if (!userValidationService.isValidUser(loggedInUserEmail, email, additional)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                    .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
+//        }
 
-        if (!userValidationService.isValidUser(loggedInUserEmail, email, additional)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
-        }
-
-        UserBotResponse userBotResponse = userBotService.update(prompt_id, email, request, additional);
+        UserBotResponse userBotResponse = userBotService.update(prompt_id, userId, request, additional);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record updated successfully", "USERBOT_SERVICE", true, userBotResponse));
     }
 
     @PostMapping("/query")
     public ResponseEntity<ApiResponse> handleCreate(
             @RequestParam int prompt_id,
-            @RequestParam String email,
+            @RequestParam long userId,
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        String loggedInUserEmail = authentication.getName();
+//        String loggedInUserEmail = authentication.getName();
+//
+//        if (!userValidationService.isValidUser(loggedInUserEmail, email, null)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                    .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
+//        }
 
-        if (!userValidationService.isValidUser(loggedInUserEmail, email, null)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
-        }
-
-        UserBotResponse userBotResponse = userBotService.create(prompt_id, email, request);
+        UserBotResponse userBotResponse = userBotService.create(prompt_id, userId, request);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record created successfully", "USERBOT_SERVICE", true, userBotResponse));
     }
 }

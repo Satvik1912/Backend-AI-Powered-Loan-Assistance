@@ -46,37 +46,38 @@ public class ChatbotServiceImpl implements ChatbotService {
     }
 
     @Override
-    public Object processQuery(String email, ChatbotIntent intent, Long additional) {
+    public Object processQuery(long userId, ChatbotIntent intent, Long additional) {
         switch (intent) {
             case ACC_PROFILE:
-                return accountDao.getUserProfile(email);
+                log.info("chatbotService: [userId] {} intent {}",userId, intent);
+                return accountDao.getUserProfile(userId);
 
             case ACC_KYC:
-                return accountDao.getKycDetails(email);
+                return accountDao.getKycDetails(userId);
 
             case LOAN_ACTIVE_NUMBER:
-                return loanDao.getActiveLoans(email);
+                return loanDao.getActiveLoans(userId);
 
             case LOAN_ACTIVE_DETAILS:
-                return loanDao.getActiveLoansDetails(email, additional);
+                return loanDao.getActiveLoansDetails(userId, additional);
 
             case BANK_LINKED_NUMBER:
-                return bankDetailsDao.countofbanks(email);
+                return bankDetailsDao.countofbanks(userId);
 
             case BANK_LINKED_DETAILS:
-                return bankDetailsDao.bankfulldetails(email,additional);
+                return bankDetailsDao.bankfulldetails(userId,additional);
 
             case LOAN_STATUS:
-                return loanDao.getLoansByUser(email);
+                return loanDao.getLoansByUser(userId);
 
             case ACC_VIEW_SALARY:
-                return userInformationDao.getSalaryDetails(email);
+                return userInformationDao.getSalaryDetails(userId);
 
             case ACC_CIBIL:
-                return userInformationDao.getCibil(email);
+                return userInformationDao.getCibil(userId);
 
             case LOAN_EMI_DETAILS:
-                return emiServiceimpl.getEmiDetails(email, additional);
+                return emiServiceimpl.getEmiDetails(userId, additional);
 
             default:
                 return ResponseEntity.badRequest().body(new ApiResponse(
@@ -91,23 +92,23 @@ public class ChatbotServiceImpl implements ChatbotService {
     }
 
     @Override
-    public String processUpdate(String email, ChatbotIntent intent, Map<String, Object> request, Long additional) {
+    public String processUpdate(long userId, ChatbotIntent intent, Map<String, Object> request, Long additional) {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case ACC_CONTACT:
                 ContactUpdateRequest contactUpdateRequest = objectMapper.convertValue(request, ContactUpdateRequest.class);
                 validateRequest(contactUpdateRequest);
-                return accountDao.updateContactInfo(email, contactUpdateRequest);
+                return accountDao.updateContactInfo(userId, contactUpdateRequest);
 
             case BANK_UPDATE:
                 BankDetailsUpdateRequest bankDetailsUpdateRequest =  objectMapper.convertValue(request, BankDetailsUpdateRequest.class);
                 validateRequest(bankDetailsUpdateRequest);
-                return bankDetailsDao.updatebankdetails(email,bankDetailsUpdateRequest, additional);
+                return bankDetailsDao.updatebankdetails(userId, bankDetailsUpdateRequest, additional);
 
             case ACC_UPDATE_SALARY:
                 SalaryUpdateRequest salaryUpdateRequest = objectMapper.convertValue(request, SalaryUpdateRequest.class);
                 validateRequest(salaryUpdateRequest);
-                return userInformationDao.updateSalaryDetails(email, salaryUpdateRequest);
+                return userInformationDao.updateSalaryDetails(userId, salaryUpdateRequest);
 
             default:
                 return "INVALID PROMPT!";
@@ -115,13 +116,13 @@ public class ChatbotServiceImpl implements ChatbotService {
     }
 
     @Override
-    public String processCreate(String email, ChatbotIntent intent, Map<String, Object> request) {
+    public String processCreate(long userId, ChatbotIntent intent, Map<String, Object> request) {
         ObjectMapper objectMapper = new ObjectMapper();
         switch (intent) {
             case BANK_ADD:
                 CreateBankDetails createBankDetails =  objectMapper.convertValue(request, CreateBankDetails.class);
                 validateRequest(createBankDetails);
-                return bankDetailsDao.createBankDetails(email,createBankDetails);
+                return bankDetailsDao.createBankDetails(userId,createBankDetails);
 
             default:
                 return "INVALID PROMPT!";

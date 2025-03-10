@@ -19,7 +19,7 @@ public interface LoanRepository extends JpaRepository<LoanEntity,Long> {
 
     List<LoanEntity> findByUserId(long userId);
 
-    @Query("SELECT l FROM LoanEntity l WHERE l.user.email = :email AND (:loanId IS NULL OR l.loanId = :loanId)")
-    LoanEntity getLoanDetailsByEmail(@Param("email") String email, @Param("loanId") Long loanId);
+    @Query("SELECT l FROM LoanEntity l WHERE l.user.id = :userId AND (:loanId IS NULL OR l.loanId = :loanId)")
+    LoanEntity getLoanDetailsById(@Param("userId") long userId, @Param("loanId") Long loanId);
 
 }

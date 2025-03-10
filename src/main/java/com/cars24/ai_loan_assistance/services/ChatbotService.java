@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.Map;
 
 public interface ChatbotService {
-    Object processQuery(String email, ChatbotIntent intent, Long additional);
-    String processUpdate(String email, ChatbotIntent intent, Map<String, Object> request, Long additional);
-    String processCreate(String email, ChatbotIntent intent, Map<String, Object> request);
+    Object processQuery(long userId, ChatbotIntent intent, Long additional);
+    String processUpdate(long userId, ChatbotIntent intent, Map<String, Object> request, Long additional);
+    String processCreate(long userId, ChatbotIntent intent, Map<String, Object> request);
 }
