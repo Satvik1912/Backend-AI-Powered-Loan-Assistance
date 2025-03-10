@@ -21,12 +21,10 @@ public class LoanEntity {
     @Column(name = "loan_id")
     private Long loanId;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_loan_user"))
     @JsonBackReference("user-loans")
     private UserEntity user;
-
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
     @JsonManagedReference("loan-emis")
@@ -51,6 +49,4 @@ public class LoanEntity {
 
     @Column(name = "interest", nullable = false)
     private Double interest;
-
-
 }

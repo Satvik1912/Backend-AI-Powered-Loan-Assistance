@@ -9,13 +9,13 @@ import java.util.List;
 @Data
 public class UserBotResponse {
     private String mainPromptText;
-    private ChatbotIntent mainPromptIntent;
+    private String responseText;
     private List<FollowUpPrompt> followups;
     private Object extraAction;
 
     public UserBotResponse(UserBot mainPrompt, List<UserBot> followupBots, Object extraAction) {
         this.mainPromptText = mainPrompt.getText();
-        this.mainPromptIntent = mainPrompt.getIntent();
+        this.responseText = mainPrompt.getResponseText();
         this.followups = followupBots.stream()
                 .map(bot -> new FollowUpPrompt(bot.getPromptId(), bot.getText()))
                 .toList();

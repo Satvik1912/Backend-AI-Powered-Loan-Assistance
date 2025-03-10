@@ -2,6 +2,9 @@ package com.cars24.ai_loan_assistance.advice;
 
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,16 +26,52 @@ public class    GlobalExceptionHandler {
             errorMap.put(error.getField(),error.getDefaultMessage());
         });
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(),"ERROR: INVALID DATA!", "APP_USER - " + HttpStatus.BAD_REQUEST.value(), false, errorMap);
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "ERROR: INVALID DATA!",
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                errorMap);
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public  ResponseEntity<ApiResponse> handleServiceExceptions(NotFoundException exception)
     {
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), "APP_USER - " + HttpStatus.BAD_REQUEST.value(),false,null);
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                null);
         return ResponseEntity.badRequest().body(apiResponse);
-
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse> handleConstraintViolationExceptions(ConstraintViolationException exception) {
+        Map<String, String> errorMap = new HashMap<>();
+        for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
+            errorMap.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "ERROR: INVALID DATA!",
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                errorMap);
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ApiResponse> handleInvalidFormatException(InvalidFormatException exception) {
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "ERROR: Invalid value for field! " + exception.getMessage(),
+                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                false,
+                null
+        );
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
 }
