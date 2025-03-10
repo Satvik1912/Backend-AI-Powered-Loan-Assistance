@@ -42,8 +42,8 @@ public class LoanDaoImpl implements LoanDao {
     }
 
     @Override
-    public ActiveLoansResponse getActiveLoans(String email) {
-        UserEntity user = userRepository.findByEmail(email)
+    public ActiveLoansResponse getActiveLoans(long userId) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         List<LoanEntity> activeLoans = loanRepository.findByUserIdAndStatus(user.getId(), LoanStatus.DISBURSED);
 
@@ -61,9 +61,9 @@ public class LoanDaoImpl implements LoanDao {
     }
 
     @Override
-    public GetLoansResponse getLoansByUser(String email) {
+    public GetLoansResponse getLoansByUser(long userId) {
         // Fetch user details
-        UserEntity user = userRepository.findByEmail(email)
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         // Fetch all loans for the user
@@ -84,8 +84,8 @@ public class LoanDaoImpl implements LoanDao {
     }
 
     @Override
-    public ActiveLoansDetailsResponse getActiveLoansDetails(String email, Long additional) {
-        LoanEntity activeLoanDetail = loanRepository.getLoanDetailsByEmail(email, additional);
+    public ActiveLoansDetailsResponse getActiveLoansDetails(long userId, Long additional) {
+        LoanEntity activeLoanDetail = loanRepository.getLoanDetailsById(userId, additional);
         ActiveLoansDetailsResponse loansDetailsResponse = new ActiveLoansDetailsResponse();
         loansDetailsResponse.setLoanId(activeLoanDetail.getLoanId());
         loansDetailsResponse.setLoanStatus(activeLoanDetail.getStatus());

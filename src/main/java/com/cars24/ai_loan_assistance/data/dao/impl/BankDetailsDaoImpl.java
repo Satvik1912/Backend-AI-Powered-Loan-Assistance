@@ -29,8 +29,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     private final UserRepository userRepository;
     GetBankDetailsRespUID getBankDetailsRespUID = new GetBankDetailsRespUID();
     @Override
-    public String createBankDetails(String email , CreateBankDetails createBankDetails) {
-        UserEntity userEntity = userRepository.findByEmail(email)
+    public String createBankDetails(long userId , CreateBankDetails createBankDetails) {
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         BankEntity bankEntity = new BankEntity();
@@ -56,8 +56,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
 
 
     @Override
-    public CountBankAcc countofbanks(String email) {
-        UserEntity user = userRepository.findByEmail(email)
+    public CountBankAcc countofbanks(long userId) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         List<BankEntity> bankEntityList = bankDetailsRepository.findByUserId(user.getId());
 
@@ -70,8 +70,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     }
 
     @Override
-    public BankFullDetails bankfulldetails(String email, long bankid) {
-        UserEntity user = userRepository.findByEmail(email)
+    public BankFullDetails bankfulldetails(long userId, long bankid) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         BankEntity bank = bankDetailsRepository.findById(bankid)
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
@@ -86,8 +86,8 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     }
 
     @Override
-    public String updatebankdetails(String email, BankDetailsUpdateRequest request, long additional) {
-        UserEntity user = userRepository.findByEmail(email)
+    public String updatebankdetails(long userId, BankDetailsUpdateRequest request, long additional) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         BankEntity bank = bankDetailsRepository.findById(additional)
