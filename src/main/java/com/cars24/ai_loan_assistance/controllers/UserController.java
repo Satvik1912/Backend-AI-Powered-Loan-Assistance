@@ -45,6 +45,7 @@ public class UserController {
 
             Map<String, Object> dataMap = (Map<String, Object>) response.getData();
             String token = (String) dataMap.get("token");
+            dataMap.remove("token");
 
             // Create an HttpOnly cookie to store the token.
             Cookie cookie = new Cookie("token", token);
@@ -56,7 +57,7 @@ public class UserController {
             httpServletResponse.addCookie(cookie);
 
             // Optionally, remove the token from the response body to avoid exposing it to JavaScript.
-            response.setData(null);
+            response.setData(dataMap);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ApiResponse response = new ApiResponse(
