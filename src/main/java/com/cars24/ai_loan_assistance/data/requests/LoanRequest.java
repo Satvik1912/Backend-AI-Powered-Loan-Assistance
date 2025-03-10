@@ -23,7 +23,7 @@ public class LoanRequest
 
     @NotNull(message = "Loan amount cannot be null")
     @Positive(message = "Loan amount must be positive")
-    private Double loanAmount;
+    private Double amountLeft;
 
     @NotNull(message = "Loan status cannot be null")
     private LoanStatus status;
@@ -33,15 +33,15 @@ public class LoanRequest
 
     private LocalDate disbursedDate;
 
-    @NotNull(message = "Principal amount cannot be null")
-    @Positive(message = "Principal amount must be positive")
-    private Double principal;
-
-    @NotNull(message = "Tenure cannot be null")
-    @Positive(message = "Tenure must be positive")
-    private Double tenure;
-
-    @NotNull(message = "Interest cannot be null")
-    @PositiveOrZero(message = "Interest must be zero or positive")
-    private Double interest;
+//    @NotNull(message = "Principal amount cannot be null")
+//    @Positive(message = "Principal amount must be positive")
+//    private Double principal;
+//
+//    @NotNull(message = "Tenure cannot be null")
+//    @Positive(message = "Tenure must be positive")
+//    private Double tenure;
+//
+//    @NotNull(message = "Interest cannot be null")
+//    @PositiveOrZero(message = "Interest must be zero or positive")
+//    private Double interest;
 }

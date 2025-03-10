@@ -14,6 +14,7 @@ public interface EmiRepository extends JpaRepository<EmiEntity, Long> {
 
     @Query("SELECT e FROM EmiEntity e WHERE e.loan.loanId = :loanId")
     List<EmiEntity> findEmisByLoanId(@Param("loanId") Long loanId);
+
     }
 
 
