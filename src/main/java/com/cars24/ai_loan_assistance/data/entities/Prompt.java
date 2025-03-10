@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@Document(collection = "prompts")
+@Document(collection = "Generic_prompts")
 public class Prompt {
     @Id
     private String id;
