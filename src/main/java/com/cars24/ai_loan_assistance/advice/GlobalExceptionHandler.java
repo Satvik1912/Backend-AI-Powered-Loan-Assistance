@@ -2,6 +2,8 @@ package com.cars24.ai_loan_assistance.advice;
 
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
+import com.cars24.ai_loan_assistance.exceptions.PromptNotFoundException;
+import com.cars24.ai_loan_assistance.exceptions.ResponseNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -73,5 +75,43 @@ public class    GlobalExceptionHandler {
                 null
         );
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(PromptNotFoundException.class)
+    public ResponseEntity<ApiResponse> handlePromptNotFoundException(PromptNotFoundException ex) {
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "APPUSR-" + HttpStatus.BAD_REQUEST.value(),
+                false,
+                null
+        );
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    // For ResponseNotFoundException
+    @ExceptionHandler(ResponseNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResponseNotFoundException(ResponseNotFoundException ex) {
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "APPUSR-" + HttpStatus.BAD_REQUEST.value(),
+                false,
+                null
+        );
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    // General exception handler
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse> handleGlobalException(Exception ex) {
+        ApiResponse apiResponse = new ApiResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred.",
+                "APPUSR-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                false,
+                null
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
 }
