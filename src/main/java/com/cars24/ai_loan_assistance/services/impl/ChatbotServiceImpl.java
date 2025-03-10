@@ -12,12 +12,21 @@ import com.cars24.ai_loan_assistance.data.requests.SalaryUpdateRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.ChatbotService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -28,6 +37,13 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final UserInformationDao userInformationDao;
     private final BankDetailsDao bankDetailsDao;
     private final EmiServiceImpl emiServiceimpl;
+
+    private Validator validator;
+
+    @Autowired
+    public void UserBotServiceImpl(Validator validator) {
+        this.validator = validator;
+    }
 
     @Override
     public Object processQuery(String email, ChatbotIntent intent, Long additional) {
@@ -80,14 +96,17 @@ public class ChatbotServiceImpl implements ChatbotService {
         switch (intent) {
             case ACC_CONTACT:
                 ContactUpdateRequest contactUpdateRequest = objectMapper.convertValue(request, ContactUpdateRequest.class);
+                validateRequest(contactUpdateRequest);
                 return accountDao.updateContactInfo(email, contactUpdateRequest);
 
             case BANK_UPDATE:
                 BankDetailsUpdateRequest bankDetailsUpdateRequest =  objectMapper.convertValue(request, BankDetailsUpdateRequest.class);
+                validateRequest(bankDetailsUpdateRequest);
                 return bankDetailsDao.updatebankdetails(email,bankDetailsUpdateRequest, additional);
 
             case ACC_UPDATE_SALARY:
                 SalaryUpdateRequest salaryUpdateRequest = objectMapper.convertValue(request, SalaryUpdateRequest.class);
+                validateRequest(salaryUpdateRequest);
                 return userInformationDao.updateSalaryDetails(email, salaryUpdateRequest);
 
             default:
@@ -101,10 +120,18 @@ public class ChatbotServiceImpl implements ChatbotService {
         switch (intent) {
             case BANK_ADD:
                 CreateBankDetails createBankDetails =  objectMapper.convertValue(request, CreateBankDetails.class);
+                validateRequest(createBankDetails);
                 return bankDetailsDao.createBankDetails(email,createBankDetails);
 
             default:
                 return "INVALID PROMPT!";
+        }
+    }
+
+    private <T> void validateRequest(T requestObject) {
+        Set<ConstraintViolation<T>> violations = validator.validate(requestObject);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
         }
     }
 }
