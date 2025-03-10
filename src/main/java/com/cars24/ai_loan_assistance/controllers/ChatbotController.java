@@ -39,7 +39,7 @@ public class ChatbotController {
             ApiResponse apiResponse = new ApiResponse(
                     HttpStatus.OK.value(),
                     "Initial prompts fetched successfully",
-                    "APPUSR-" + HttpStatus.OK.value(),  // No error code for success case
+                    "GENERIC_CHATBOT-" + HttpStatus.OK.value(),
                     true,
                     response
             );
@@ -58,7 +58,7 @@ public class ChatbotController {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.OK.value(),
                 "Interaction details fetched successfully",
-                "APPUSR-" + HttpStatus.OK.value(),  // No error code for success case
+                "GENERIC_CHATBOT-" + HttpStatus.OK.value(),
                 true,
                 response
         );
