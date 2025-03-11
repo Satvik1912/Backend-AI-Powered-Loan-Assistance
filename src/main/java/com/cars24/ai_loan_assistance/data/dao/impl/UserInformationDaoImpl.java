@@ -25,10 +25,10 @@ public class UserInformationDaoImpl implements UserInformationDao {
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));
 
-        SalaryDetailsResponse response = new SalaryDetailsResponse();
-        response.setSalary(userInformationEntity.getSalary());
-        response.setIncomeType(userInformationEntity.getIncomeType());
-        return response;
+        return SalaryDetailsResponse.builder()
+                .salary(userInformationEntity.getSalary())
+                .incomeType(userInformationEntity.getIncomeType())
+                .build();
     }
 
     @Override
