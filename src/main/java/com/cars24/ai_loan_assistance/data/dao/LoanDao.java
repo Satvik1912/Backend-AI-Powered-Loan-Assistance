@@ -14,7 +14,7 @@ public interface LoanDao {
     LoanEntity store(LoanEntity loan);
     LoanEntity getLoan(long loan_id);
     Page<LoanEntity> getLoans(int page, int limit);
-    ActiveLoansResponse getActiveLoans(String email);
-    GetLoansResponse getLoansByUser(String email);
-    ActiveLoansDetailsResponse getActiveLoansDetails(String email, Long additional);
+    ActiveLoansResponse getActiveLoans(long userId);
+    GetLoansResponse getLoansByUser(long userId);
+    ActiveLoansDetailsResponse getActiveLoansDetails(long userId, Long additional);
 }

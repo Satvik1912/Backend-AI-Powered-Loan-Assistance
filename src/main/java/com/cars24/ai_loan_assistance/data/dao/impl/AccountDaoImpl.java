@@ -22,9 +22,9 @@ public class AccountDaoImpl implements AccountDao {
     private final UserInformationRepository userInformationRepository;
 
     @Override
-    public UserProfileResponse getUserProfile(String email) {
+    public UserProfileResponse getUserProfile(long userId) {
         log.info("[getUserProfile] in dao");
-        UserEntity userEntity = userRepository.findByEmail(email)
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         UserProfileResponse response = new UserProfileResponse();
         response.setName(userEntity.getName());
@@ -35,8 +35,8 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public String updateContactInfo(String email, ContactUpdateRequest request) {
-        UserEntity userEntity = userRepository.findByEmail(email)
+    public String updateContactInfo(long userId, ContactUpdateRequest request) {
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         if(request.getPhone() != null){
@@ -50,8 +50,8 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public KycResponse getKycDetails(String email) {
-        UserEntity user = userRepository.findByEmail(email)
+    public KycResponse getKycDetails(long userId) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
