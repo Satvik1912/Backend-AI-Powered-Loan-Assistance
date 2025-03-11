@@ -21,23 +21,25 @@ public class ResponseServiceImpl implements ResponseService {
     private ResponseRepository responseRepository;
 
     @Override
-    public RespCollectionResponse getResponseByPromptId(String promptId) {
-        Prompt prompt = mongoTemplate.findById(promptId, Prompt.class);
+    public RespCollectionResponse getResponseByPromptId(String prompt_id){
+        Query query = new Query(Criteria.where("prompt_id").is(prompt_id));
+        Prompt prompt = mongoTemplate.findOne(query, Prompt.class);
+        //Prompt prompt = mongoTemplate.findById(promptId, Prompt.class);
         if (prompt == null) {
-            throw new PromptNotFoundException("Prompt not found: " + promptId);
+            throw new PromptNotFoundException("Prompt not found: " + prompt_id);
         }
-        Query query = new Query(Criteria.where("promptId").is(promptId));
+        //Query query = new Query(Criteria.where("prompt_id").is(prompt_id));
         Response response = mongoTemplate.findOne(query, Response.class);
         if (response == null) {
-            throw new ResponseNotFoundException("Response not found for prompt: " + promptId);
+            throw new ResponseNotFoundException("Response not found for prompt: " + prompt_id);
         }
         return convertToResponse(response);
     }
 
     private RespCollectionResponse convertToResponse(Response response) {
         RespCollectionResponse respCollectionResponse = new RespCollectionResponse();
-        respCollectionResponse.setId(response.getId());
-        respCollectionResponse.setPromptId(response.getPromptId());
+        respCollectionResponse.setResponse_id(response.getResponse_id());
+        respCollectionResponse.setPrompt_id(response.getPrompt_id());
         respCollectionResponse.setText(response.getText());
         respCollectionResponse.setHasAttachments(response.isHasAttachments());
         return respCollectionResponse;

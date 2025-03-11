@@ -25,7 +25,8 @@ public class ChatbotController {
 
     @GetMapping("/interaction")
     public ResponseEntity<ApiResponse> getChatbotData(
-            @RequestParam(required = false) String promptId) {
+        @RequestParam(value = "prompt_id", required = false) String promptId){
+            //@RequestParam(required = false) String promptId) {
 
         ChatbotInteractionResponse response = new ChatbotInteractionResponse();
 
@@ -38,7 +39,7 @@ public class ChatbotController {
             ApiResponse apiResponse = new ApiResponse(
                     HttpStatus.OK.value(),
                     "Initial prompts fetched successfully",
-                    "APPUSR-" + HttpStatus.OK.value(),  // No error code for success case
+                    "GENERIC_CHATBOT-" + HttpStatus.OK.value(),
                     true,
                     response
             );
@@ -57,7 +58,7 @@ public class ChatbotController {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.OK.value(),
                 "Interaction details fetched successfully",
-                "APPUSR-" + HttpStatus.OK.value(),  // No error code for success case
+                "GENERIC_CHATBOT-" + HttpStatus.OK.value(),
                 true,
                 response
         );
