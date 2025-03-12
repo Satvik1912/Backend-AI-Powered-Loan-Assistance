@@ -12,6 +12,4 @@ public class SalaryUpdateRequest {
     @Valid
     @Min(value = 30000, message = "Salary needs to atleast be 30000 INR")
     double salary;
-
-    IncomeType incomeType;
 }
