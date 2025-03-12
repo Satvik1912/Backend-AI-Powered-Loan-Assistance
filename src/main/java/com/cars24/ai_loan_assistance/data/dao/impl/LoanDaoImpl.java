@@ -86,15 +86,16 @@ public class LoanDaoImpl implements LoanDao {
     @Override
     public ActiveLoansDetailsResponse getActiveLoansDetails(long userId, Long additional) {
         LoanEntity activeLoanDetail = loanRepository.getLoanDetailsById(userId, additional);
-        ActiveLoansDetailsResponse loansDetailsResponse = new ActiveLoansDetailsResponse();
-        loansDetailsResponse.setLoanId(activeLoanDetail.getLoanId());
-        loansDetailsResponse.setLoanStatus(activeLoanDetail.getStatus());
-        loansDetailsResponse.setLoanType(activeLoanDetail.getType());
-        loansDetailsResponse.setPrincipal(activeLoanDetail.getPrincipal());
-        loansDetailsResponse.setInterest(activeLoanDetail.getInterest());
-        loansDetailsResponse.setTenure(activeLoanDetail.getTenure());
-        loansDetailsResponse.setDisbursedDate(activeLoanDetail.getDisbursedDate());
 
-        return loansDetailsResponse;
+
+        return ActiveLoansDetailsResponse.builder()
+                .loanId(activeLoanDetail.getLoanId())
+                .loanStatus(activeLoanDetail.getStatus())
+                .loanType(activeLoanDetail.getType())
+                .principal(activeLoanDetail.getPrincipal())
+                .interest(activeLoanDetail.getInterest())
+                .tenure(activeLoanDetail.getTenure())
+                .disbursedDate(activeLoanDetail.getDisbursedDate())
+                .build();
     }
 }
