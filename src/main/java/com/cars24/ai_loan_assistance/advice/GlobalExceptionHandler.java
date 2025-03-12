@@ -110,7 +110,7 @@ public class    GlobalExceptionHandler {
                 "An unexpected error occurred.",
                 "APPUSR-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 false,
-                null
+                ex
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }

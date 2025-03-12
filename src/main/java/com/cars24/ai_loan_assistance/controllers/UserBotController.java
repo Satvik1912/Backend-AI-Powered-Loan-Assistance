@@ -1,5 +1,6 @@
 package com.cars24.ai_loan_assistance.controllers;
 
+import com.cars24.ai_loan_assistance.data.entities.CustomUserDetails;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.data.responses.UserBotResponse;
 import com.cars24.ai_loan_assistance.services.UserBotService;
@@ -25,7 +26,7 @@ public class UserBotController {
 
     private final UserBotService userBotService;
     private final UserValidationService userValidationService;
-
+    UserBotResponse userBotResponse;
     @GetMapping("/query")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> handleQuery(
@@ -34,18 +35,28 @@ public class UserBotController {
             @RequestParam(required = false) Long additional,
             Authentication authentication) {
 
-//        String loggedInUserId = authentication.getName();
-//
-//        if (!userValidationService.isValidUser(loggedInUserEmail, userId, additional)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(new ApiResponse(403, "You are not authorized to view this data", "USERBOT_SERVICE", false, null));
-//        }
-        log.info("userBotController: [userId] {}",userId);
-        UserBotResponse userBotResponse = userBotService.interact(prompt_id, userId, additional);
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            Long loggedInUserId = userDetails.getUserId();
+            if (userValidationService.isValidUser(loggedInUserId, userId,additional,prompt_id))
+                 {
+                      userBotResponse = userBotService.interact(prompt_id, userId, additional);
+
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse(403, "You are not authorized to see this data", "USERBOT_SERVICE", false, null));            }
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse(403, "Invalid Principle object", "USERBOT_SERVICE", false, null));        }
+
+
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Prompt retrieved successfully", "USERBOT_SERVICE", true, userBotResponse));
     }
 
     @PutMapping("/query")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> handleUpdate(
             @RequestParam int prompt_id,
             @RequestParam long userId,
@@ -53,15 +64,28 @@ public class UserBotController {
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-//        String loggedInUserEmail = authentication.getName();
-//
-//        if (!userValidationService.isValidUser(loggedInUserEmail, email, additional)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
-//        }
+        Object principal = authentication.getPrincipal();
 
-        UserBotResponse userBotResponse = userBotService.update(prompt_id, userId, request, additional);
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record updated successfully", "USERBOT_SERVICE", true, userBotResponse));
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            Long loggedInUserId = userDetails.getUserId();
+
+            if (!loggedInUserId.equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
+            }
+
+            if (additional != null && !userValidationService.isValidUser(loggedInUserId, userId, additional,prompt_id)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
+            }
+
+            UserBotResponse userBotResponse = userBotService.update(prompt_id, userId, request, additional);
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record updated successfully", "USERBOT_SERVICE", true, userBotResponse));
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse(403, "Invalid Principal object", "USERBOT_SERVICE", false, null));
     }
 
     @PostMapping("/query")
@@ -71,14 +95,28 @@ public class UserBotController {
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-//        String loggedInUserEmail = authentication.getName();
-//
-//        if (!userValidationService.isValidUser(loggedInUserEmail, email, null)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
-//        }
+        Object principal = authentication.getPrincipal();
 
-        UserBotResponse userBotResponse = userBotService.create(prompt_id, userId, request);
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record created successfully", "USERBOT_SERVICE", true, userBotResponse));
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            Long loggedInUserId = userDetails.getUserId();
+
+            if (!loggedInUserId.equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
+            }
+
+            if (!userValidationService.isValidUser(loggedInUserId, userId, null,prompt_id)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
+            }
+
+            UserBotResponse userBotResponse = userBotService.create(prompt_id, userId, request);
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record created successfully", "USERBOT_SERVICE", true, userBotResponse));
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiResponse(403, "Invalid Principal object", "USERBOT_SERVICE", false, null));
     }
+
 }
