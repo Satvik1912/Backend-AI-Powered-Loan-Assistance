@@ -37,8 +37,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/userbot/query").hasAuthority("ROLE_USER")
-
                         .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
+                        .requestMatchers("/api/user").authenticated()              // Require authentication for user info
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

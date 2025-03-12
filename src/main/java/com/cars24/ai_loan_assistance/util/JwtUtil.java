@@ -50,8 +50,14 @@ public class JwtUtil {
     }
 
     public String extractRole(String token) {
-        return (String) extractClaims(token).get("role");
+        Claims claims = extractClaims(token);
+        Object rolesObj = claims.get("roles");
+        if (rolesObj instanceof List<?> rolesList && !rolesList.isEmpty()) {
+            return rolesList.get(0).toString(); // Return the first role in the list
+        }
+        return null;
     }
+
 
     public String extractUserId(String token) {
         return (String) extractClaims(token).get("id");

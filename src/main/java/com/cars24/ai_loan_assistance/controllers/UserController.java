@@ -1,17 +1,23 @@
 package com.cars24.ai_loan_assistance.controllers;
+import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.requests.LoginRequest;
 import com.cars24.ai_loan_assistance.data.requests.SignupRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.UserService;
 import com.cars24.ai_loan_assistance.services.impl.UserServiceImpl;
+import com.cars24.ai_loan_assistance.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,9 +25,12 @@ import java.util.Map;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Slf4j
 public class UserController {
 
+    private final JwtUtil jwtUtil;
     private final UserService userService;
+
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody SignupRequest user) {
         try{
@@ -50,13 +59,10 @@ public class UserController {
             // Create an HttpOnly cookie to store the token.
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
-            // In production, set this to true (requires HTTPS). For development, you might keep it false.
             cookie.setSecure(false);
             cookie.setPath("/");
             cookie.setMaxAge(86400); // Token expiration: 86400 seconds = 1 day
             httpServletResponse.addCookie(cookie);
-
-            // Optionally, remove the token from the response body to avoid exposing it to JavaScript.
             response.setData(dataMap);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
@@ -67,6 +73,28 @@ public class UserController {
                     false,
                     null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse> getCurrentUser(@CookieValue(name = "token", required = false) String token) {
+        try {
+            if (token == null || token.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Missing token.", "APPUSER", false, null));
+            }
+
+            Long userId = Long.valueOf(jwtUtil.extractUserId(token));
+            String role = jwtUtil.extractRole(token);
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("userId", userId);
+            data.put("role", role);
+
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "User fetched successfully.", "APPUSER", true, data));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Invalid token: " + ex.getMessage(), "APPUSER", false, null));
         }
     }
 }

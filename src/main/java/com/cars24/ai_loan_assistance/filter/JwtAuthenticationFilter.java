@@ -31,7 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain )
             throws ServletException, IOException {
 
         String requestPath = request.getServletPath();
@@ -62,8 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        if (token != null) {
+        if (token == null) {
+            logger.debug("No JWT token found in request for path: " + requestPath);
+        } else {
             String email = jwtUtil.extractEmail(token);
+            logger.debug("Extracted email from token: " + email);
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 try {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
@@ -72,12 +78,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
+                        logger.debug("User authenticated successfully: " + email);
                     } else {
+                        logger.debug("Invalid JWT token for email: " + email);
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
                         return;
                     }
-                } catch(UsernameNotFoundException exc) {
-                    // Optionally, clear the cookie if the user is not found
+                } catch (UsernameNotFoundException exc) {
+                    logger.debug("User not found for email: " + email);
                     Cookie cookie = new Cookie("token", null);
                     cookie.setHttpOnly(true);
                     cookie.setPath("/");
