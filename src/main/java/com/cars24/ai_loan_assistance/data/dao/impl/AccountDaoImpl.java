@@ -26,12 +26,12 @@ public class AccountDaoImpl implements AccountDao {
         log.info("[getUserProfile] in dao");
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
-        UserProfileResponse response = new UserProfileResponse();
-        response.setName(userEntity.getName());
-        response.setPhone(userEntity.getPhone());
-        response.setEmail(userEntity.getEmail());
-        response.setAddress(userEntity.getAddress());
-        return response;
+        return UserProfileResponse.builder()
+                .name(userEntity.getName())
+                .phone(userEntity.getPhone())
+                .email(userEntity.getEmail())
+                .address(userEntity.getAddress())
+                .build();
     }
 
     @Override
@@ -57,9 +57,9 @@ public class AccountDaoImpl implements AccountDao {
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));
 
-        KycResponse response = new KycResponse();
-        response.setAadhar(userInformationEntity.getAadhar());
-        response.setPAN(userInformationEntity.getPan());
-        return response;
+        return KycResponse.builder()
+                .Aadhar(userInformationEntity.getAadhar())
+                .PAN(userInformationEntity.getPan())
+                .build();
     }
 }

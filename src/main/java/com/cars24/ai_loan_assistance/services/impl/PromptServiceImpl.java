@@ -21,9 +21,8 @@ public class PromptServiceImpl implements PromptService {
     @Override
     public List<NextPromptResponse> getInitialPrompts() {
         Query query = new Query(Criteria
-                .where("category").is("main_category")
-                .and("displayOrder").lte(5));
-        query.with(Sort.by(Sort.Order.asc("id")));
+                .where("category").is("main_category"));
+        query.with(Sort.by(Sort.Order.asc("displayOrder")));
         List<Prompt> prompts = mongoTemplate.find(query, Prompt.class);
 
              return prompts.stream()
@@ -32,14 +31,16 @@ public class PromptServiceImpl implements PromptService {
     }
 
     @Override
-    public List<NextPromptResponse> getNextPrompts(String promptId) {
-        Prompt prompt = mongoTemplate.findById(promptId, Prompt.class);
+    public List<NextPromptResponse> getNextPrompts(String prompt_id) {
+        Query findPromptQuery = new Query(Criteria.where("prompt_id").is(prompt_id));
+        Prompt prompt = mongoTemplate.findOne(findPromptQuery, Prompt.class);
+        //Prompt prompt = mongoTemplate.findById(promptId, Prompt.class);
         if (prompt == null) {
             //throw new RuntimeException("Prompt not found: " + promptId);
-            throw new PromptNotFoundException("Prompt not found :" + promptId);
+            throw new PromptNotFoundException("Prompt not found :" + prompt_id);
         }
 
-        Query query = new Query(Criteria.where("_id").in(prompt.getNextPromptIds()));
+        Query query = new Query(Criteria.where("prompt_id").in(prompt.getNextPromptIds()));
         List<Prompt> nextPrompts = mongoTemplate.find(query, Prompt.class);
 
         return nextPrompts.stream()
@@ -49,7 +50,7 @@ public class PromptServiceImpl implements PromptService {
 
     private NextPromptResponse convertToNextResponse(Prompt prompt) {
         NextPromptResponse nextPromptResponse = new NextPromptResponse();
-        nextPromptResponse.setId(prompt.getId());
+        nextPromptResponse.setPrompt_id(prompt.getPrompt_id());
         nextPromptResponse.setText(prompt.getText());
         nextPromptResponse.setCategory(prompt.getCategory());
         return nextPromptResponse;

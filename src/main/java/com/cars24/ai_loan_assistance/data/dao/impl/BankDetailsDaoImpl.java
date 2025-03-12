@@ -75,14 +75,14 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
         BankEntity bank = bankDetailsRepository.findById(bankid)
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
-        BankFullDetails bankFullDetails = new BankFullDetails();
-        bankFullDetails.setBankName(bank.getBankName());
-        bankFullDetails.setBankAccountType(bank.getBankAccountType());
-        bankFullDetails.setIfscCode(bank.getIfscCode());
-        bankFullDetails.setAccountNumber(bank.getAccountNumber());
-        bankFullDetails.setAccountHolderName(bank.getAccountHolderName());
 
-        return bankFullDetails;
+        return BankFullDetails.builder()
+                .bankName(bank.getBankName())
+                .bankAccountType(bank.getBankAccountType())
+                .ifscCode(bank.getIfscCode())
+                .accountNumber(bank.getAccountNumber())
+                .accountHolderName(bank.getAccountHolderName())
+                .build();
     }
 
     @Override
