@@ -93,10 +93,13 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
         BankEntity bank = bankDetailsRepository.findById(additional)
                 .orElseThrow(() -> new NotFoundException("Bank details not found!"));
 
-        if (!bank.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not authorized to update this bank account!");
 
+        if (!bank.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this bank account!");
         }
+
+
+
         if (request.getAccountHolderName() != null) {
             bank.setAccountHolderName(request.getAccountHolderName());
         }
