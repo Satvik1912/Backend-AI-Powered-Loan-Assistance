@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/userbot/query").hasAuthority("ROLE_USER")
 
-                        .requestMatchers("/api/signup", "/api/login").permitAll()        // Signup/Login Public Endpoints
+                        .requestMatchers("/api/signup", "/api/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -46,11 +46,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Define the CORS configuration source
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Allow requests from your frontend origin
+       
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),

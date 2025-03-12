@@ -1,5 +1,6 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
+import com.cars24.ai_loan_assistance.data.entities.CustomUserDetails;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
@@ -33,7 +34,7 @@ public class UserDetailService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-        return new User(user.getEmail(), user.getPassword(), authorities);
+        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword(), authorities);
     }
 
 }

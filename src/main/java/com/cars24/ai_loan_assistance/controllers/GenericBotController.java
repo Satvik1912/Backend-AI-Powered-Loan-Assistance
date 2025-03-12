@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chatbot")
-public class ChatbotController {
+public class GenericBotController {
 
     @Autowired
     private PromptService promptService;
