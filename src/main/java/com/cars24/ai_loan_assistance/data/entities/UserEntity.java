@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -45,6 +46,7 @@ public class UserEntity {
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
+    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid phone number format.")
     @Column(name = "phone_number", unique = true, nullable = false)
     private String phone;
 
