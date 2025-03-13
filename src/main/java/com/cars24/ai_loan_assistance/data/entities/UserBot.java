@@ -20,4 +20,7 @@ public class UserBot {
     private String text;
     private ChatbotIntent intent;
     private String responseText;
+    private String requestType;
+    @Field("fields to add")
+    private Object fieldsToAdd;
 }

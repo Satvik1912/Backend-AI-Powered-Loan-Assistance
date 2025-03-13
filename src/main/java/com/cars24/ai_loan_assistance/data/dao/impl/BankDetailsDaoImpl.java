@@ -34,10 +34,7 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
                 .orElseThrow(() -> new NotFoundException("User does not exist!"));
 
         BankEntity bankEntity = new BankEntity();
-
-
         bankEntity.setBankName(createBankDetails.getBankName());
-
         bankEntity.setBankAccountType(createBankDetails.getBankAccountType());
         bankEntity.setAccountNumber(createBankDetails.getAccountNumber());
         bankEntity.setUser(userEntity);
