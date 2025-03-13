@@ -16,7 +16,7 @@ public class BankEntity {
     private Long bankId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_bank_details_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_bank_details_user"))
     @JsonBackReference("bank-details")
     private UserEntity user;
 
