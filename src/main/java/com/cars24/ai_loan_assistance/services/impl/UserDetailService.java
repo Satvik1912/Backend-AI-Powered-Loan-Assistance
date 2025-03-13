@@ -29,12 +29,12 @@ public class UserDetailService implements UserDetailsService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        // Assign role dynamically based on user data
-        Role role = user.getRole(); // Assuming your entity has a `role` field
+//        // Assign role dynamically based on user data
+//        Role role = user.getRole(); // Assuming your entity has a `role` field
+//
+//        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword(), authorities);
+        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword());//, authorities);
     }
 
 }

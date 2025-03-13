@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setName(user.getName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(encodedPassword);
-        userEntity.setRole(user.getRole());
+//        userEntity.setRole(user.getRole());
         userEntity.setPhone(user.getPhone());
 
         dao.saveUser(userEntity);
@@ -64,16 +64,16 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userExists.get();
             if (passwordEncoder.matches(user.getPassword(), userEntity.getPassword())) {
                 String id = String.valueOf(userEntity.getId());
-                Role role = userEntity.getRole();
+//                Role role = userEntity.getRole();
                 String name = userEntity.getName();
 
-                String token = jwtUtil.generateToken(user.getEmail(), id, (role));
+                String token = jwtUtil.generateToken(user.getEmail(), id);//, (role));
 
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("token", token);
                 responseData.put("id", id);
                 responseData.put("name", name);
-                responseData.put("role", role);
+//                responseData.put("role", role);
 
                 return new ApiResponse(
                         HttpStatus.OK.value(),

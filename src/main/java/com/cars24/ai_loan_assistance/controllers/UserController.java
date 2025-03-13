@@ -85,11 +85,11 @@ public class UserController {
             }
 
             Long userId = Long.valueOf(jwtUtil.extractUserId(token));
-            String role = jwtUtil.extractRole(token);
+//            String role = jwtUtil.extractRole(token);
 
             Map<String, Object> data = new HashMap<>();
             data.put("userId", userId);
-            data.put("role", role);
+//            data.put("role", role);
 
             return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "User fetched successfully.", "APPUSER", true, data));
         } catch (Exception ex) {

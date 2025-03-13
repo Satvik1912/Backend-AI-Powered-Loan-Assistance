@@ -1,7 +1,6 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,7 +14,7 @@ public class CustomUserDetails implements UserDetails {
     private List<SimpleGrantedAuthority> authorities;
 
     // Constructor
-    public CustomUserDetails(Long userId, String username, String password, List<SimpleGrantedAuthority> authorities) {
+    public CustomUserDetails(Long userId, String username, String password) {
         this.userId = userId;
         this.username = username;
         this.password = password;
