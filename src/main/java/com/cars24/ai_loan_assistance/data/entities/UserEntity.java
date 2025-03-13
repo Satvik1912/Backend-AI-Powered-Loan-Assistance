@@ -30,9 +30,9 @@ public class UserEntity {
     @JsonManagedReference("user-info")
     private UserInformationEntity userDetails;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference("bank-details")
-    private BankEntity bankEntity;
+    private List<BankEntity> bankEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference("user-loans")

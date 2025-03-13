@@ -17,7 +17,7 @@ public class UserBotResponse {
         this.mainPromptText = mainPrompt.getText();
         this.responseText = mainPrompt.getResponseText();
         this.followups = followupBots.stream()
-                .map(bot -> new FollowUpPrompt(bot.getPromptId(), bot.getText(), bot.getRequestType()))
+                .map(bot -> new FollowUpPrompt(bot.getPromptId(), bot.getText(), bot.getRequestType(), bot.getFieldsToAdd()))
                 .toList();
         this.extraAction = extraAction;
     }
@@ -27,5 +27,6 @@ public class UserBotResponse {
         private final int promptId;
         private final String text;
         private final String httpRequestType;
+        private final Object fieldsToAdd;
     }
 }
