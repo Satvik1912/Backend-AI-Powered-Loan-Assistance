@@ -1,6 +1,5 @@
 package com.cars24.ai_loan_assistance.util;
 
-import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -27,11 +24,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String email, String userId, Role role) {
+    public String generateToken(String email, String userId) {
         return Jwts.builder()
                 .setClaims(Map.of(
-                        "id", userId,
-                        "roles", List.of(role.name()) // Store enum as String
+                        "id", userId
+//                        "roles", List.of(role.name()) // Store enum as String
                 ))
                 .setSubject(email)
                 .setIssuedAt(new Date())
@@ -49,14 +46,14 @@ public class JwtUtil {
         return extractClaims(token).getSubject();
     }
 
-    public String extractRole(String token) {
-        Claims claims = extractClaims(token);
-        Object rolesObj = claims.get("roles");
-        if (rolesObj instanceof List<?> rolesList && !rolesList.isEmpty()) {
-            return rolesList.get(0).toString(); // Return the first role in the list
-        }
-        return null;
-    }
+//    public String extractRole(String token) {
+//        Claims claims = extractClaims(token);
+//        Object rolesObj = claims.get("roles");
+//        if (rolesObj instanceof List<?> rolesList && !rolesList.isEmpty()) {
+//            return rolesList.get(0).toString(); // Return the first role in the list
+//        }
+//        return null;
+//    }
 
 
     public String extractUserId(String token) {
