@@ -28,7 +28,6 @@ public class UserBotController {
     private final UserValidationService userValidationService;
     UserBotResponse userBotResponse;
     @GetMapping("/query")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> handleQuery(
             @RequestParam int prompt_id,
             @RequestParam long userId,
@@ -56,7 +55,6 @@ public class UserBotController {
     }
 
     @PutMapping("/query")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> handleUpdate(
             @RequestParam int prompt_id,
             @RequestParam long userId,

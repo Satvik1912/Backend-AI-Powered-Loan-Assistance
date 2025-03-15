@@ -47,11 +47,6 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- OAuth2 Resource Server -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
 
 		<!-- MySQL Connector -->
 		<dependency>
@@ -100,11 +95,6 @@
 			<version>4.4.0</version>
 		</dependency>
 
-		<!-- Spring Boot WebFlux -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
 
 		<!-- Spring Security Crypto -->
 		<dependency>

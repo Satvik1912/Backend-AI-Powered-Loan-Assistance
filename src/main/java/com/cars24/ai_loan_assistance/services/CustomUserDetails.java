@@ -12,7 +12,7 @@ public class CustomUserDetails extends User {
     private final Long userId;
 
     public CustomUserDetails(UserEntity user) {
-        super(user.getEmail(), user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
+        super(user.getEmail(), user.getPassword(), List.of());//, List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
         this.userId = user.getId(); // Store the user ID
     }
 
