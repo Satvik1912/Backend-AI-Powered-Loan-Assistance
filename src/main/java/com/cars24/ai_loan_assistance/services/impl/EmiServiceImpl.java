@@ -27,7 +27,7 @@ public class EmiServiceImpl implements EmiService {
 
         if (emis.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse(404, "No EMI details found for this loan.", "LOAN_EMI_DETAILS", false, null));
+                    .body(new ApiResponse(403, "No EMI details found for this loan.", "LOAN_EMI_DETAILS", false, null));
         }
 
         List<EmiEntity> lastPaid = emis.stream()
