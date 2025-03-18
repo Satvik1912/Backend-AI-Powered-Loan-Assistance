@@ -76,6 +76,30 @@ public class UserController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logout(HttpServletResponse httpServletResponse, @CookieValue(name = "token") String token) {
+        // Optionally, you could validate or log the token/claims here if needed.
+
+        // Clear the token cookie
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // Set to true in production if using HTTPS
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Immediately expire the cookie
+        httpServletResponse.addCookie(cookie);
+
+        ApiResponse response = new ApiResponse(
+                HttpStatus.OK.value(),
+                "Logout successful.",
+                "APPUSER",
+                true,
+                null
+        );
+        return ResponseEntity.ok(response);
+    }
+
+
+
     @GetMapping("/user")
     public ResponseEntity<ApiResponse> getCurrentUser(@CookieValue(name = "token", required = false) String token) {
         try {
