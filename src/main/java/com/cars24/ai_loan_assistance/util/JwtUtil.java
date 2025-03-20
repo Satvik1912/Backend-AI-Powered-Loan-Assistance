@@ -28,12 +28,13 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(Map.of(
                         "id", userId
-//                        "roles", List.of(role.name()) // Store enum as String
+//                  Claims are stored in the Payload part of the JWT
                 ))
-                .setSubject(email)
+                .setSubject(email) //The Subject represents who the token is about.
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                //The signature ensures that the token is authentic and has not been tampered with.
                 .compact();
     }
 
@@ -41,19 +42,13 @@ public class JwtUtil {
     public boolean validateToken(String token, String email) {
         return (extractEmail(token).equals(email) && !isTokenExpired(token));
     }
+      //Whether the token belongs to the given email using extractEmail().
+// EXPIRY
+
 
     public String extractEmail(String token) {
         return extractClaims(token).getSubject();
     }
-
-//    public String extractRole(String token) {
-//        Claims claims = extractClaims(token);
-//        Object rolesObj = claims.get("roles");
-//        if (rolesObj instanceof List<?> rolesList && !rolesList.isEmpty()) {
-//            return rolesList.get(0).toString(); // Return the first role in the list
-//        }
-//        return null;
-//    }
 
 
     public String extractUserId(String token) {
