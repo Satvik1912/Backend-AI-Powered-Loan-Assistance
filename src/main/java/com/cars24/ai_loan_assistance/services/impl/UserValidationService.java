@@ -10,10 +10,10 @@ public class UserValidationService {
 
     private final UserRepository userRepository;
 
-    public boolean isValidUser(Long loggedInUserId, long userId, Long additionalId,int promptId) {
-        if (!loggedInUserId.equals(userId)) {
-            return false;
-        }
-        return userRepository.existsByUserIdAndAdditionalId(userId, additionalId,promptId);
+    public boolean isValidUser(Long loggedInUserId,  Long additionalId,int promptId) {
+//        if (!loggedInUserId.equals(userId)) {
+//            return false;
+//        }
+        return userRepository.existsByUserIdAndAdditionalId(loggedInUserId, additionalId,promptId);
     }
 }

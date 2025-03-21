@@ -35,9 +35,9 @@ public class SecurityConfig {
                 // Enable CORS with custom configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
+                //Cross-Site Request Forgery
+                // CSRF protection is disabled, which is common for APIs since they often don't use browser-based forms.
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/userbot/query").hasAuthority("ROLE_USER")
-
                         .requestMatchers("/api/signup", "/api/login", "/api/chatbot/interaction").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 HttpMethod.OPTIONS.name()
         ));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true);//cookies
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // Apply this configuration to all endpoints (or limit as needed)

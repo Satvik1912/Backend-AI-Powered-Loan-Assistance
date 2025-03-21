@@ -63,7 +63,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7);
             }
-        }
+        }                 //              Cookie 	Authorization
+        //API request from a browser	   Yes	      No	       Token from Cookie
+        //Mobile app using headers	       No	      Yes	       Token from Header
 
         if (token == null) {
             logger.debug("No JWT token found in request for path: " + requestPath);
