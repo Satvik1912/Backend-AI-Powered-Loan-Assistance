@@ -50,12 +50,6 @@ public class UserBotServiceImpl implements UserBotService {
         });
     }
 
-    /**
-     * Common method to process UserBot requests and create responses
-     * @param promptId the prompt ID to look up
-     * @param actionSupplier supplier function for the specific action to perform
-     * @return standardized UserBotResponse
-     */
     private UserBotResponse processUserBotRequest(int promptId, Supplier<Object> actionSupplier) {
         UserBot userBot = getUserBot(promptId);
 
@@ -72,12 +66,6 @@ public class UserBotServiceImpl implements UserBotService {
         return new UserBotResponse(userBot, followUpBots, extraAction);
     }
 
-    /**
-     * Helper method to get a UserBot by promptId and throw a standardized exception if not found
-     * @param promptId the prompt ID to look up
-     * @return the UserBot
-     * @throws NotFoundException if the promptId doesn't exist
-     */
     private UserBot getUserBot(int promptId) {
         UserBot userBot = userBotRepository.findByPromptId(promptId);
         if (userBot == null) {
