@@ -79,6 +79,7 @@ public class ChatbotServiceImpl implements ChatbotService {
             case LOAN_EMI_DETAILS:
                 return emiServiceimpl.getEmiDetails(userId, additional);
 
+
             default:
                 return ResponseEntity.badRequest().body(new ApiResponse(
                         HttpStatus.BAD_REQUEST.value(),
