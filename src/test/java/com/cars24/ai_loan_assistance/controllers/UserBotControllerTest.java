@@ -1,6 +1,7 @@
 //package com.cars24.ai_loan_assistance.controllers;
 //
 //import com.cars24.ai_loan_assistance.data.entities.CustomUserDetails;
+//import com.cars24.ai_loan_assistance.data.entities.UserBot;
 //import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 //import com.cars24.ai_loan_assistance.data.responses.UserBotResponse;
 //import com.cars24.ai_loan_assistance.services.UserBotService;
@@ -14,8 +15,11 @@
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.Authentication;
+//import org.springframework.test.context.junit.jupiter.SpringExtension;
 //
+//import java.util.ArrayList;
 //import java.util.HashMap;
+//import java.util.List;
 //import java.util.Map;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +31,7 @@
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.when;
 //
-//@ExtendWith(MockitoExtension.class)
+//@ExtendWith(SpringExtension.class)
 //public class UserBotControllerTest {
 //
 //    @Mock
@@ -57,7 +61,18 @@
 //        requestBody.put("key1", "value1");
 //        requestBody.put("key2", "value2");
 //
-//        mockResponse = new UserBotResponse();
+//        // Create a dummy main prompt UserBot object
+//        UserBot mainPrompt = new UserBot();
+//        mainPrompt.setText("Main prompt text");
+//        mainPrompt.setResponseText("Main response text");
+//
+//        // Create an empty followup list (or add dummy UserBot objects as needed)
+//        List<UserBot> followupBots = new ArrayList<>();
+//
+//        // Define an extra action (could be null or a dummy object)
+//        Object extraAction = null;
+//
+//        mockResponse = new UserBotResponse(mainPrompt, followupBots, extraAction);
 //
 //        when(authentication.getPrincipal()).thenReturn(customUserDetails);
 //        when(customUserDetails.getUserId()).thenReturn(userId);
@@ -75,10 +90,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(200, response.getBody().getStatusCode());
-//        assertEquals("Prompt retrieved successfully", response.getBody().getMessage());
-//        assertEquals(true, response.getBody().isSuccess());
-//        assertEquals(mockResponse, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(200, body.getStatusCode());
+//        assertEquals("Prompt retrieved successfully", body.getMessage());
+//        assertEquals(true, body.isSuccess());
+//        assertEquals(mockResponse, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, additionalId, promptId);
 //        verify(userBotService).interact(promptId, userId, additionalId);
@@ -95,10 +111,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("You are not authorized to see this data", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("You are not authorized to see this data", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, additionalId, promptId);
 //        verify(userBotService, never()).interact(anyInt(), anyLong(), any());
@@ -115,10 +132,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("Invalid Principle object", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("Invalid Principle object", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService, never()).isValidUser(anyLong(), any(), anyInt());
 //        verify(userBotService, never()).interact(anyInt(), anyLong(), any());
@@ -136,10 +154,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(200, response.getBody().getStatusCode());
-//        assertEquals("Record updated successfully", response.getBody().getMessage());
-//        assertEquals(true, response.getBody().isSuccess());
-//        assertEquals(mockResponse, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(200, body.getStatusCode());
+//        assertEquals("Record updated successfully", body.getMessage());
+//        assertEquals(true, body.isSuccess());
+//        assertEquals(mockResponse, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, additionalId, promptId);
 //        verify(userBotService).update(promptId, userId, requestBody, additionalId);
@@ -156,10 +175,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("You are not authorized to update this data", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("You are not authorized to update this data", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, additionalId, promptId);
 //        verify(userBotService, never()).update(anyInt(), anyLong(), any(), any());
@@ -176,10 +196,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(200, response.getBody().getStatusCode());
-//        assertEquals("Record updated successfully", response.getBody().getMessage());
-//        assertEquals(true, response.getBody().isSuccess());
-//        assertEquals(mockResponse, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(200, body.getStatusCode());
+//        assertEquals("Record updated successfully", body.getMessage());
+//        assertEquals(true, body.isSuccess());
+//        assertEquals(mockResponse, body.getData());
 //
 //        verify(userValidationService, never()).isValidUser(anyLong(), any(), anyInt());
 //        verify(userBotService).update(promptId, userId, requestBody, null);
@@ -196,10 +217,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("Invalid Principal object", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("Invalid Principal object", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService, never()).isValidUser(anyLong(), any(), anyInt());
 //        verify(userBotService, never()).update(anyInt(), anyLong(), any(), any());
@@ -217,10 +239,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(200, response.getBody().getStatusCode());
-//        assertEquals("Record created successfully", response.getBody().getMessage());
-//        assertEquals(true, response.getBody().isSuccess());
-//        assertEquals(mockResponse, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(200, body.getStatusCode());
+//        assertEquals("Record created successfully", body.getMessage());
+//        assertEquals(true, body.isSuccess());
+//        assertEquals(mockResponse, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, null, promptId);
 //        verify(userBotService).create(promptId, userId, requestBody);
@@ -237,10 +260,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("You are not authorized to create this data", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("You are not authorized to create this data", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService).isValidUser(userId, null, promptId);
 //        verify(userBotService, never()).create(anyInt(), anyLong(), any());
@@ -257,10 +281,11 @@
 //        // Assert
 //        assertNotNull(response);
 //        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//        assertEquals(403, response.getBody().getStatusCode());
-//        assertEquals("Invalid Principal object", response.getBody().getMessage());
-//        assertEquals(false, response.getBody().isSuccess());
-//        assertEquals(null, response.getBody().getData());
+//        ApiResponse body = response.getBody();
+//        assertEquals(403, body.getStatusCode());
+//        assertEquals("Invalid Principal object", body.getMessage());
+//        assertEquals(false, body.isSuccess());
+//        assertEquals(null, body.getData());
 //
 //        verify(userValidationService, never()).isValidUser(anyLong(), any(), anyInt());
 //        verify(userBotService, never()).create(anyInt(), anyLong(), any());

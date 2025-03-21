@@ -14,6 +14,7 @@ public class UserValidationService {
 //        if (!loggedInUserId.equals(userId)) {
 //            return false;
 //        }
+//        return userRepository.existsByUserIdAndAdditionalId(loggedInUserId, additionalId,promptId);
         return userRepository.existsByUserIdAndAdditionalId(loggedInUserId, additionalId,promptId);
     }
 }

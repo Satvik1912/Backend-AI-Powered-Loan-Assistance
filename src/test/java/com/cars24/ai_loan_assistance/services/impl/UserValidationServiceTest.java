@@ -21,43 +21,43 @@
 //    private UserValidationService userValidationService;
 //
 //    private Long loggedInUserId;
-//    private long userId;
 //    private Long additionalId;
 //    private int promptId;
 //
 //    @BeforeEach
 //    void setUp() {
 //        loggedInUserId = 1L;
-//        userId = 1L;
 //        additionalId = 100L;
 //        promptId = 10;
 //    }
 //
 //    @Test
-//    void testIsValidUser_Success() {
-//        when(userRepository.existsByUserIdAndAdditionalId(userId, additionalId, promptId)).thenReturn(true);
+//    void testIsValidUser_ReturnsTrue_WhenRepositoryReturnsTrue() {
+//        // Arrange
+//        when(userRepository.existsByUserIdAndAdditionalId(loggedInUserId, additionalId, promptId))
+//                .thenReturn(true);
 //
-//        boolean result = userValidationService.isValidUser(loggedInUserId, userId, additionalId, promptId);
+//        // Act
+//        boolean result = userValidationService.isValidUser(loggedInUserId, additionalId, promptId);
 //
+//        // Assert
 //        assertTrue(result);
-//        verify(userRepository, times(1)).existsByUserIdAndAdditionalId(userId, additionalId, promptId);
+//        verify(userRepository, times(1))
+//                .existsByUserIdAndAdditionalId(loggedInUserId, additionalId, promptId);
 //    }
 //
 //    @Test
-//    void testIsValidUser_Fails_WhenUserIdMismatch() {
-//        boolean result = userValidationService.isValidUser(2L, userId, additionalId, promptId);
+//    void testIsValidUser_ReturnsFalse_WhenRepositoryReturnsFalse() {
+//        // Arrange
+//        when(userRepository.existsByUserIdAndAdditionalId(loggedInUserId, additionalId, promptId))
+//                .thenReturn(false);
 //
+//        // Act
+//        boolean result = userValidationService.isValidUser(loggedInUserId, additionalId, promptId);
+//
+//        // Assert
 //        assertFalse(result);
-//        verify(userRepository, never()).existsByUserIdAndAdditionalId(anyLong(), anyLong(), anyInt());
-//    }
-//
-//    @Test
-//    void testIsValidUser_Fails_WhenRepositoryReturnsFalse() {
-//        when(userRepository.existsByUserIdAndAdditionalId(userId, additionalId, promptId)).thenReturn(false);
-//
-//        boolean result = userValidationService.isValidUser(loggedInUserId, userId, additionalId, promptId);
-//
-//        assertFalse(result);
-//        verify(userRepository, times(1)).existsByUserIdAndAdditionalId(userId, additionalId, promptId);
+//        verify(userRepository, times(1))
+//                .existsByUserIdAndAdditionalId(loggedInUserId, additionalId, promptId);
 //    }
 //}

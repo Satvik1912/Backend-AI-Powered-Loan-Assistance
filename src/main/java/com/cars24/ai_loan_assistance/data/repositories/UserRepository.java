@@ -51,7 +51,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Boolean existsByUserIdAndAdditionalId(
             @Param("UserId") Long userId,
             @Param("additionalId") Long additionalId,
-            Long id, @Param("promptId") int promptId
+            @Param("promptId") int promptId
     );
 
 
