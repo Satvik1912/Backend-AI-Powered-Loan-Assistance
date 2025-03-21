@@ -118,7 +118,7 @@ public class UserBotController {
             CustomUserDetails userDetails = (CustomUserDetails) principal;
             loggedInUserId = userDetails.getUserId();
         }
-          feedbackService.feedback(loggedInUserId, feedback);
+        feedbackService.feedback(loggedInUserId, feedback);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Feedback sent successfully", "USERBOT_SERVICE", true,null));
     }
 

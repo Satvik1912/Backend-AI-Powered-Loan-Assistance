@@ -12,6 +12,7 @@
 		<relativePath/>
 	</parent>
 
+
 	<groupId>com.cars24</groupId>
 	<artifactId>ai-loan-assistance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
