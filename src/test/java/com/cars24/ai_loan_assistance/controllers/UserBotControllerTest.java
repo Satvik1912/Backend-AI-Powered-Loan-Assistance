@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -40,6 +41,7 @@ class UserBotControllerTest {
 
     @BeforeEach
     void setUp() {
+        // Create a test CustomUserDetails instance with userId = 1L.
         userDetails = new CustomUserDetails(1L, "testUser", "password");
         when(authentication.getPrincipal()).thenReturn(userDetails);
     }
@@ -50,20 +52,18 @@ class UserBotControllerTest {
         long userId = 1L;
         long additional = 2L;
 
-        // Fix: Provide a valid UserBot object instead of null
-        UserBot userBot = new UserBot(); // Assuming UserBot has a no-argument constructor
-// Set the required properties manually if needed
-
+        // Create a valid UserBot instance (adjust properties as necessary)
+        UserBot userBot = new UserBot();
         UserBotResponse mockResponse = new UserBotResponse(userBot, Collections.emptyList(), null);
 
-       // UserBotResponse mockResponse = new UserBotResponse(new UserBot("Sample response"), Collections.emptyList(), null);
-
-        when(userValidationService.isValidUser(userDetails.getUserId(), userId, additional, promptId)).thenReturn(true);
+        // Stub the validation and service calls.
+        when(userValidationService.isValidUser(userDetails.getUserId(), userId, additional, promptId))
+                .thenReturn(true);
         when(userBotService.interact(promptId, userId, additional)).thenReturn(mockResponse);
 
         ResponseEntity<ApiResponse> response = userBotController.handleQuery(promptId, userId, additional, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isSuccess());
     }
@@ -74,11 +74,13 @@ class UserBotControllerTest {
         long userId = 2L;
         long additional = 2L;
 
-        when(userValidationService.isValidUser(userDetails.getUserId(), userId, additional, promptId)).thenReturn(false);
+        // Simulate unauthorized access by having validation return false.
+        when(userValidationService.isValidUser(userDetails.getUserId(), userId, additional, promptId))
+                .thenReturn(false);
 
         ResponseEntity<ApiResponse> response = userBotController.handleQuery(promptId, userId, additional, authentication);
 
-        assertEquals(403, response.getStatusCodeValue());
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertFalse(response.getBody().isSuccess());
     }
@@ -89,19 +91,16 @@ class UserBotControllerTest {
         long userId = 1L;
         Map<String, Object> request = Map.of("key", "value");
 
-        // Fix: Provide a valid UserBot object instead of null
-        UserBot userBot = new UserBot(); // Assuming UserBot has a no-argument constructor
-// Set the required properties manually if needed
-
+        // Create a valid UserBot instance (adjust properties as necessary)
+        UserBot userBot = new UserBot();
         UserBotResponse mockResponse = new UserBotResponse(userBot, Collections.emptyList(), null);
 
-        //UserBotResponse mockResponse = new UserBotResponse(new UserBot("Updated text"), Collections.emptyList(), null);
-
+        // Stub the update service.
         when(userBotService.update(promptId, userId, request, null)).thenReturn(mockResponse);
 
         ResponseEntity<ApiResponse> response = userBotController.handleUpdate(promptId, userId, null, request, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isSuccess());
     }
@@ -112,20 +111,18 @@ class UserBotControllerTest {
         long userId = 1L;
         Map<String, Object> request = Map.of("key", "value");
 
-        // Fix: Provide a valid UserBot object instead of null
-        UserBot userBot = new UserBot(); // Assuming UserBot has a no-argument constructor
-// Set the required properties manually if needed
-
+        // Create a valid UserBot instance (adjust properties as necessary)
+        UserBot userBot = new UserBot();
         UserBotResponse mockResponse = new UserBotResponse(userBot, Collections.emptyList(), null);
 
-        //UserBotResponse mockResponse = new UserBotResponse(new UserBot("Created response"), Collections.emptyList(), null);
-
-        when(userValidationService.isValidUser(userDetails.getUserId(), userId, null, promptId)).thenReturn(true);
+        // Stub the validation and creation service.
+        when(userValidationService.isValidUser(userDetails.getUserId(), userId, null, promptId))
+                .thenReturn(true);
         when(userBotService.create(promptId, userId, request)).thenReturn(mockResponse);
 
         ResponseEntity<ApiResponse> response = userBotController.handleCreate(promptId, userId, request, authentication);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isSuccess());
     }
