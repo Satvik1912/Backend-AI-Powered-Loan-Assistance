@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userExists.get();
             if (passwordEncoder.matches(user.getPassword(), userEntity.getPassword())) {
                 String id = String.valueOf(userEntity.getId());
-//                Role role = userEntity.getRole();
                 String name = userEntity.getName();
 
                 String token = jwtUtil.generateToken(user.getEmail(), id);//, (role));
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
                 responseData.put("token", token);
                 responseData.put("id", id);
                 responseData.put("name", name);
-//                responseData.put("role", role);
 
                 return new ApiResponse(
                         HttpStatus.OK.value(),

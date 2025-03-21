@@ -62,7 +62,7 @@ public class UserController {
             cookie.setSecure(false);
             cookie.setPath("/");
             cookie.setMaxAge(86400); // Token expiration: 86400 seconds = 1 day
-            httpServletResponse.addCookie(cookie);
+            httpServletResponse.addCookie(cookie);//Attaches the cookie to the HTTP response, sending it to the client.
             response.setData(dataMap);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
@@ -113,7 +113,9 @@ public class UserController {
 
             Map<String, Object> data = new HashMap<>();
             data.put("userId", userId);
-//            data.put("role", role);
+//
+
+
 
             return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "User fetched successfully.", "APPUSER", true, data));
         } catch (Exception ex) {
