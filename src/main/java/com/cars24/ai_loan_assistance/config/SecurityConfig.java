@@ -39,6 +39,7 @@ public class SecurityConfig {
                 // CSRF protection is disabled, which is common for APIs since they often don't use browser-based forms.
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/signup", "/api/login").permitAll()
+                        .requestMatchers("/pdfs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
