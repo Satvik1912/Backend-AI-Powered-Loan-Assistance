@@ -1,9 +1,7 @@
 package com.cars24.ai_loan_assistance.data.repositories;
 
 import com.cars24.ai_loan_assistance.data.entities.UserBot;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository

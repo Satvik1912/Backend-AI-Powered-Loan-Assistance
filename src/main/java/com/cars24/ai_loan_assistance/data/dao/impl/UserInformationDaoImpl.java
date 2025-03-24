@@ -18,12 +18,14 @@ public class UserInformationDaoImpl implements UserInformationDao {
     private final UserRepository userRepository;
     private final UserInformationRepository userInformationRepository;
 
+    private static final String USER_INFORMATION_NOT_FOUND = "User information does not exist!";
+    private static final String USER_NOT_FOUND = "User does not exist!";
     @Override
     public SalaryDetailsResponse getSalaryDetails(long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NotFoundException("User information does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_INFORMATION_NOT_FOUND));
 
         return SalaryDetailsResponse.builder()
                 .salary(userInformationEntity.getSalary())
@@ -34,9 +36,9 @@ public class UserInformationDaoImpl implements UserInformationDao {
     @Override
     public String updateSalaryDetails(long userId, SalaryUpdateRequest request) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(userEntity.getId())
-                .orElseThrow(() -> new NotFoundException("User information does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_INFORMATION_NOT_FOUND));
 
 
         if(request.getSalary() != 0){
@@ -49,9 +51,9 @@ public class UserInformationDaoImpl implements UserInformationDao {
     @Override
     public int getCibil(long userId) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(userEntity.getId())
-                .orElseThrow(() -> new NotFoundException("User information does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_INFORMATION_NOT_FOUND));
 
         return userInformationEntity.getCibil();
     }

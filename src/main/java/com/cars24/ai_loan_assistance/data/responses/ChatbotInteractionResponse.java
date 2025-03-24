@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 @Data
 public class ChatbotInteractionResponse {
-    private RespCollectionResponse response;  // Bot's response to the prompt
+    private RespCollectionResponse response;
     private List<NextPromptResponse> nextPrompts;
     private List<NextPromptResponse> initialPrompts;
 }

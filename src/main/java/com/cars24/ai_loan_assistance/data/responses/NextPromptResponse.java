@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class NextPromptResponse {
-    private String prompt_id;
+    private String promptId;
     private String text;
     private String category;
 }

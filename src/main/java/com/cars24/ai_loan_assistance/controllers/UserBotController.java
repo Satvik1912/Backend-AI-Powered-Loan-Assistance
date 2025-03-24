@@ -30,96 +30,98 @@ public class UserBotController {
     private final UserValidationService userValidationService;
     UserBotResponse userBotResponse;
     private final FeedbackServiceImpl feedbackService;
-
+    private static final String SERVICE_NAME = "USERBOT_SERVICE";
     @GetMapping("/query")
     public ResponseEntity<ApiResponse> handleQuery(
-            @RequestParam int prompt_id,
+
+            @RequestParam int promptId,
             @RequestParam(required = false) Long additional,
             Authentication authentication) {
 
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
+//        Object principal = authentication.getPrincipal();
+//
+//        if (principal instanceof CustomUserDetails) {
+//            CustomUserDetails userDetails = (CustomUserDetails) principal;
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
-            if (userValidationService.isValidUser(loggedInUserId, additional, prompt_id)) {
-                userBotResponse = userBotService.interact(prompt_id, loggedInUserId, additional);
+            if (userValidationService.isValidUser(loggedInUserId, additional, promptId)) {
+                userBotResponse = userBotService.interact(promptId, loggedInUserId, additional);
 
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ApiResponse(403, "You are not authorized to see this data", "USERBOT_SERVICE", false, null));
+                        .body(new ApiResponse(403, "You are not authorized to see this data", SERVICE_NAME, false, null));
             }
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse(403, "Invalid Principle object", "USERBOT_SERVICE", false, null));
+                    .body(new ApiResponse(403, "Invalid Principle object", SERVICE_NAME, false, null));
         }
 
 
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Prompt retrieved successfully", "USERBOT_SERVICE", true, userBotResponse));
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Prompt retrieved successfully", SERVICE_NAME, true, userBotResponse));
     }
 
     @PutMapping("/query")
     public ResponseEntity<ApiResponse> handleUpdate(
-            @RequestParam int prompt_id,
+            @RequestParam int promptId,
             @RequestParam(required = false) Long additional,
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        Object principal = authentication.getPrincipal();
+        //Object principal = authentication.getPrincipal();
 
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
 
-            if (additional != null && !userValidationService.isValidUser(loggedInUserId, additional, prompt_id)) {
+            if (additional != null && !userValidationService.isValidUser(loggedInUserId, additional, promptId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ApiResponse(403, "You are not authorized to update this data", "USERBOT_SERVICE", false, null));
+                        .body(new ApiResponse(403, "You are not authorized to update this data", SERVICE_NAME, false, null));
             }
 
-            UserBotResponse userBotResponse = userBotService.update(prompt_id, loggedInUserId, request, additional);
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record updated successfully", "USERBOT_SERVICE", true, userBotResponse));
+            UserBotResponse userBotResponse = userBotService.update(promptId, loggedInUserId, request, additional);
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record updated successfully", SERVICE_NAME, true, userBotResponse));
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ApiResponse(403, "Invalid Principal object", "USERBOT_SERVICE", false, null));
+                .body(new ApiResponse(403, "Invalid Principal object", SERVICE_NAME, false, null));
     }
 
     @PostMapping("/query")
     public ResponseEntity<ApiResponse> handleCreate(
-            @RequestParam int prompt_id,
+            @RequestParam int promptId,
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        Object principal = authentication.getPrincipal();
+        //Object principal = authentication.getPrincipal();
 
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
+        //if (principal instanceof CustomUserDetails userDetails) {// Simplified pattern matching
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
 
-            if (!userValidationService.isValidUser(loggedInUserId, null, prompt_id)) {
+            if (!userValidationService.isValidUser(loggedInUserId, null, promptId)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ApiResponse(403, "You are not authorized to create this data", "USERBOT_SERVICE", false, null));
+                        .body(new ApiResponse(403, "You are not authorized to create this data", SERVICE_NAME, false, null));
             }
 
-            UserBotResponse userBotResponse = userBotService.create(prompt_id, loggedInUserId, request);
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record created successfully", "USERBOT_SERVICE", true, userBotResponse));
+            UserBotResponse userBotResponse = userBotService.create(promptId, loggedInUserId, request);
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Record created successfully", SERVICE_NAME, true, userBotResponse));
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ApiResponse(403, "Invalid Principal object", "USERBOT_SERVICE", false, null));
+                .body(new ApiResponse(403, "Invalid Principal object", SERVICE_NAME, false, null));
     }
 
     @PostMapping("/feedback")
     public ResponseEntity<ApiResponse> feedbackhandler(@RequestBody String feedback, Authentication authentication) {
-        Object principal = authentication.getPrincipal();
+        //Object principal = authentication.getPrincipal();
 
         Long loggedInUserId = null;
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
+//        if (principal instanceof CustomUserDetails) {
+//            CustomUserDetails userDetails = (CustomUserDetails) principal;
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             loggedInUserId = userDetails.getUserId();
         }
         feedbackService.feedback(loggedInUserId, feedback);
-        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Feedback sent successfully", "USERBOT_SERVICE", true,null));
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Feedback sent successfully", SERVICE_NAME, true,null));
     }
 
 }

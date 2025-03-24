@@ -58,7 +58,7 @@ class PromptServiceImplTest {
 
         assertNotNull(responses);
         assertEquals(2, responses.size());
-        assertEquals("1", responses.get(0).getPrompt_id());
+        assertEquals("1", responses.get(0).getPromptId());
         assertEquals("First Prompt", responses.get(0).getText());
 
         verify(mongoTemplate, times(1)).find(any(Query.class), eq(Prompt.class));
@@ -73,7 +73,7 @@ class PromptServiceImplTest {
 
         assertNotNull(responses);
         assertEquals(1, responses.size());
-        assertEquals("2", responses.get(0).getPrompt_id());
+        assertEquals("2", responses.get(0).getPromptId());
         assertEquals("Second Prompt", responses.get(0).getText());
 
         verify(mongoTemplate, times(1)).findOne(any(Query.class), eq(Prompt.class));

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountDaoImpl implements AccountDao {
 
+    private static final String USER_NOT_FOUND = "User does not exist!";
     private final UserRepository userRepository;
     private final UserInformationRepository userInformationRepository;
 
@@ -25,7 +26,7 @@ public class AccountDaoImpl implements AccountDao {
     public UserProfileResponse getUserProfile(long userId) {
         log.info("[getUserProfile] in dao");
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         return UserProfileResponse.builder()
                 .name(userEntity.getName())
                 .phone(userEntity.getPhone())
@@ -37,7 +38,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public String updateContactInfo(long userId, ContactUpdateRequest request) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         if(request.getPhone() != null){
             userEntity.setPhone(request.getPhone());
@@ -52,14 +53,14 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public KycResponse getKycDetails(long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         UserInformationEntity userInformationEntity = userInformationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new NotFoundException("User information does not exist!"));
 
         return KycResponse.builder()
-                .Aadhar(userInformationEntity.getAadhar())
-                .PAN(userInformationEntity.getPan())
+                .aadhar(userInformationEntity.getAadhar())
+                .pan(userInformationEntity.getPan())
                 .build();
     }
 }

@@ -3,10 +3,8 @@ package com.cars24.ai_loan_assistance.data.requests;
 
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanStatus;
 import com.cars24.ai_loan_assistance.data.entities.enums.LoanType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +31,4 @@ public class LoanRequest
 
     private LocalDate disbursedDate;
 
-//    @NotNull(message = "Principal amount cannot be null")
-//    @Positive(message = "Principal amount must be positive")
-//    private Double principal;
-//
-//    @NotNull(message = "Tenure cannot be null")
-//    @Positive(message = "Tenure must be positive")
-//    private Double tenure;
-//
-//    @NotNull(message = "Interest cannot be null")
-//    @PositiveOrZero(message = "Interest must be zero or positive")
-//    private Double interest;
 }

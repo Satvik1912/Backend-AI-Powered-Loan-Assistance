@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BankDetailsDaoImpl implements BankDetailsDao {
 
+    private static final String USER_NOT_FOUND = "User does not exist!";
+    private static final String BANK_NOT_FOUND = "Bank details not found!";
     private final BankDetailsRepository bankDetailsRepository;
 
     private final UserRepository userRepository;
@@ -31,7 +33,7 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     @Override
     public String createBankDetails(long userId , CreateBankDetails createBankDetails) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         BankEntity bankEntity = new BankEntity();
         bankEntity.setBankName(createBankDetails.getBankName());
@@ -55,13 +57,13 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     @Override
     public CountBankAcc countofbanks(long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         List<BankEntity> bankEntityList = bankDetailsRepository.findByUserId(user.getId());
 
         int bankCount = bankEntityList.size();
         List<BankInfoDTO> bankDetails = bankEntityList.stream()
                 .map(bank -> new BankInfoDTO(bank.getBankId(), bank.getBankName(), bank.getAccountNumber()))  // Include bankId
-                .collect(Collectors.toList());
+                .toList();
 
         return new CountBankAcc(bankCount, bankDetails);
     }
@@ -69,9 +71,9 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     @Override
     public BankFullDetails bankfulldetails(long userId, long bankid) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         BankEntity bank = bankDetailsRepository.findById(bankid)
-                .orElseThrow(() -> new NotFoundException("Bank details not found!"));
+                .orElseThrow(() -> new NotFoundException(BANK_NOT_FOUND));
 
         return BankFullDetails.builder()
                 .bankName(bank.getBankName())
@@ -85,10 +87,10 @@ public class BankDetailsDaoImpl implements BankDetailsDao {
     @Override
     public String updatebankdetails(long userId, BankDetailsUpdateRequest request, long additional) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User does not exist!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         BankEntity bank = bankDetailsRepository.findById(additional)
-                .orElseThrow(() -> new NotFoundException("Bank details not found!"));
+                .orElseThrow(() -> new NotFoundException(BANK_NOT_FOUND));
 
 
         if (!bank.getUser().getId().equals(user.getId())) {

@@ -18,8 +18,14 @@ import java.util.*;
 @Slf4j
 public class EmiServiceImpl implements EmiService {
 
+
+    private final EmiRepository emiRepository;
+
     @Autowired
-    private EmiRepository emiRepository;
+    public EmiServiceImpl(EmiRepository emiRepository) {
+        this.emiRepository = emiRepository;
+    }
+
 
     @Override
     public Object getEmiDetails(long userId, Long loanId) {

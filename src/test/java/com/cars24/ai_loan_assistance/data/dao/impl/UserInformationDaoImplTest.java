@@ -1,6 +1,5 @@
 package com.cars24.ai_loan_assistance.data.dao.impl;
 
-import com.cars24.ai_loan_assistance.data.dao.impl.UserInformationDaoImpl;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserInformationEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.IncomeType;

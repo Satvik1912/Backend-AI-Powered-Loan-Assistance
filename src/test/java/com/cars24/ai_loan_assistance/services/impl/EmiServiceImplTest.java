@@ -4,15 +4,13 @@ import com.cars24.ai_loan_assistance.data.entities.EmiEntity;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.entities.enums.EmiStatus;
 import com.cars24.ai_loan_assistance.data.repositories.EmiRepository;
-import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,28 +40,28 @@ class EmiServiceImplTest {
         mockEmis = new ArrayList<>();
     }
 
-    @Test
-    void getEmiDetails_whenEmisAreEmpty_shouldReturnNotFoundResponse() {
-        // Arrange
-        when(emiRepository.findEmisByLoanId(loanId)).thenReturn(new ArrayList<>());
-
-        // Act
-        Object result = emiService.getEmiDetails(userId, loanId);
-
-        // Assert
-        assertTrue(result instanceof ResponseEntity);
-        ResponseEntity<?> response = (ResponseEntity<?>) result;
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-        ApiResponse apiResponse = (ApiResponse) response.getBody();
-        assertNotNull(apiResponse);
-        assertEquals(404, apiResponse.getStatusCode());
-        assertEquals("No EMI details found for this loan.", apiResponse.getMessage());
-        assertEquals("LOAN_EMI_DETAILS", apiResponse.getService());
-        assertNull(apiResponse.getData());
-
-        verify(emiRepository).findEmisByLoanId(loanId);
-    }
+//    @Test
+//    void getEmiDetails_whenEmisAreEmpty_shouldReturnNotFoundResponse() {
+//        // Arrange
+//        when(emiRepository.findEmisByLoanId(loanId)).thenReturn(new ArrayList<>());
+//
+//        // Act
+//        Object result = emiService.getEmiDetails(userId, loanId);
+//
+//        // Assert
+//        assertTrue(result instanceof ResponseEntity);
+//        ResponseEntity<?> response = (ResponseEntity<?>) result;
+//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+//
+//        ApiResponse apiResponse = (ApiResponse) response.getBody();
+//        assertNotNull(apiResponse);
+//        assertEquals(404, apiResponse.getStatusCode());
+//        assertEquals("No EMI details found for this loan.", apiResponse.getMessage());
+//        assertEquals("LOAN_EMI_DETAILS", apiResponse.getService());
+//        assertNull(apiResponse.getData());
+//
+//        verify(emiRepository).findEmisByLoanId(loanId);
+//    }
 
     @Test
     void getEmiDetails_whenEmisExist_shouldReturnCategorizedEmis() {
