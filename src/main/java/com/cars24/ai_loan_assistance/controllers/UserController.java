@@ -28,6 +28,9 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
+    private static final String APPUSER = "APPUSER";
+    private static final String TOKEN_KEY = "token";
+
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
@@ -40,7 +43,7 @@ public class UserController {
             ApiResponse response = new ApiResponse(
                     HttpStatus.CONFLICT.value(),
                     e.getMessage(),
-                    "APPUSER",
+                    APPUSER,
                     false,
                     null);
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
@@ -53,11 +56,11 @@ public class UserController {
             ApiResponse response = userService.login(user);
 
             Map<String, Object> dataMap = (Map<String, Object>) response.getData();
-            String token = (String) dataMap.get("token");
-            dataMap.remove("token");
+            String token = (String) dataMap.get(TOKEN_KEY);
+            dataMap.remove(TOKEN_KEY);
 
             // Create an HttpOnly cookie to store the token.
-            Cookie cookie = new Cookie("token", token);
+            Cookie cookie = new Cookie(TOKEN_KEY, token);
             cookie.setHttpOnly(true);
             cookie.setSecure(false);
             cookie.setPath("/");
@@ -69,7 +72,7 @@ public class UserController {
             ApiResponse response = new ApiResponse(
                     HttpStatus.BAD_REQUEST.value(),
                     e.getMessage(),
-                    "APPUSER",
+                    APPUSER,
                     false,
                     null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -81,7 +84,7 @@ public class UserController {
         // Optionally, you could validate or log the token/claims here if needed.
 
         // Clear the token cookie
-        Cookie cookie = new Cookie("token", null);
+        Cookie cookie = new Cookie(TOKEN_KEY, null);
         cookie.setHttpOnly(true);
         cookie.setSecure(false); // Set to true in production if using HTTPS
         cookie.setPath("/");
@@ -91,7 +94,7 @@ public class UserController {
         ApiResponse response = new ApiResponse(
                 HttpStatus.OK.value(),
                 "Logout successful.",
-                "APPUSER",
+                APPUSER,
                 true,
                 null
         );
@@ -101,26 +104,24 @@ public class UserController {
 
 
     @GetMapping("/user")
-    public ResponseEntity<ApiResponse> getCurrentUser(@CookieValue(name = "token", required = false) String token) {
+    public ResponseEntity<ApiResponse> getCurrentUser(@CookieValue(name = TOKEN_KEY, required = false) String token) {
         try {
             if (token == null || token.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Missing token.", "APPUSER", false, null));
+                        .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Missing token.", APPUSER, false, null));
             }
 
             Long userId = Long.valueOf(jwtUtil.extractUserId(token));
-//            String role = jwtUtil.extractRole(token);
 
             Map<String, Object> data = new HashMap<>();
             data.put("userId", userId);
-//
 
 
 
-            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "User fetched successfully.", "APPUSER", true, data));
+            return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "User fetched successfully.", APPUSER, true, data));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Invalid token: " + ex.getMessage(), "APPUSER", false, null));
+                    .body(new ApiResponse(HttpStatus.UNAUTHORIZED.value(), "Invalid token: " + ex.getMessage(), APPUSER, false, null));
         }
     }
 }

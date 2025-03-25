@@ -17,16 +17,26 @@ import java.util.List;
 @RequestMapping("/api/chatbot")
 public class GenericBotController {
 
-    @Autowired
-    private PromptService promptService;
+//    @Autowired
+//    private PromptService promptService;
+//
+//    @Autowired
+//    private ResponseService responseService;
 
+
+    private final PromptService promptService;
+    private final ResponseService responseService;
+
+    // Constructor Injection
     @Autowired
-    private ResponseService responseService;
+    public GenericBotController(PromptService promptService, ResponseService responseService) {
+        this.promptService = promptService;
+        this.responseService = responseService;
+    }
 
     @GetMapping("/interaction")
     public ResponseEntity<ApiResponse> getChatbotData(
         @RequestParam(value = "prompt_id", required = false) String promptId){
-            //@RequestParam(required = false) String promptId) {
 
         ChatbotInteractionResponse response = new ChatbotInteractionResponse();
 

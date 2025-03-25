@@ -1,11 +1,13 @@
-package com.cars24.ai_loan_assistance.util;
 
+package com.cars24.ai_loan_assistance.util;
+import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,46 +15,66 @@ import java.util.Map;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private String secretKey;
 
-    private final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
+    private static final String INVALID_TOKEN_MESSAGE = "Invalid token: ";
+    private static  long expirationTime = 86400000;
 
     private Key getSigningKey() {
-        if (SECRET_KEY == null || SECRET_KEY.isEmpty()) {
+        if (secretKey == null || secretKey.isEmpty()) {
             throw new IllegalStateException("JWT Secret Key is null or empty! Check environment variables or properties file.");
         }
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String generateToken(String email, String userId) {
+        if (email == null || userId == null) {
+            throw new IllegalArgumentException("Both email and userId must not be null.");
+        }
         return Jwts.builder()
-                .setClaims(Map.of(
-                        "id", userId
-//                  Claims are stored in the Payload part of the JWT
-                ))
-                .setSubject(email) //The Subject represents who the token is about.
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                //The signature ensures that the token is authentic and has not been tampered with.
+                .claims(Map.of("id", userId))
+                .subject(email)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusMillis(expirationTime)))
+                .signWith(getSigningKey())
                 .compact();
     }
 
-
     public boolean validateToken(String token, String email) {
-        return (extractEmail(token).equals(email) && !isTokenExpired(token));
+        try {
+            return extractEmail(token).equals(email) && !isTokenExpired(token);
+        } catch (ExpiredJwtException | SecurityException | MalformedJwtException e) {
+            return false; // Token is invalid
+        }
     }
-      //Whether the token belongs to the given email using extractEmail().
-// EXPIRY
-
 
     public String extractEmail(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            Claims claims = extractClaims(token);
+            String subject = claims.getSubject();
+            if (subject == null || subject.isEmpty()) {
+                throw new IllegalArgumentException("Invalid token: Missing or empty 'subject' claim.");
+            }
+            return subject;
+        } catch (ExpiredJwtException | SecurityException | MalformedJwtException e) {
+            // Propagate specific JWT exceptions directly
+            throw e;
+        } catch (Exception e) {
+            // Wrap unexpected exceptions in IllegalArgumentException
+            throw new IllegalArgumentException(INVALID_TOKEN_MESSAGE + e.getMessage(), e);
+        }
     }
 
-
     public String extractUserId(String token) {
-        return (String) extractClaims(token).get("id");
+        try {
+            return (String) extractClaims(token).get("id");
+        } catch (ExpiredJwtException | SecurityException| MalformedJwtException e) {
+            // Propagate specific JWT exceptions directly
+            throw e;
+        } catch (Exception e) {
+            // Wrap unexpected exceptions in IllegalArgumentException
+            throw new IllegalArgumentException(INVALID_TOKEN_MESSAGE + e.getMessage(), e);
+        }
     }
 
     private boolean isTokenExpired(String token) {
@@ -60,10 +82,17 @@ public class JwtUtil {
     }
 
     private Claims extractClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException | SecurityException | MalformedJwtException e) {
+            throw e; // Propagate expired token exception
+        }catch (Exception e) {
+            // Wrap unexpected exceptions in IllegalArgumentException
+            throw new IllegalArgumentException(INVALID_TOKEN_MESSAGE + e.getMessage(), e);
+        }
     }
 }

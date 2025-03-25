@@ -10,7 +10,7 @@ public class FeedBackEntity {
     @Id
     private String id;
     @Field(name = "user id")
-    private Long user_id;
+    private Long userId;
     @Field(name = "Feedback")
     private String feedback;
 }

@@ -5,7 +5,6 @@ import com.cars24.ai_loan_assistance.data.requests.SignupRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
 import com.cars24.ai_loan_assistance.services.UserService;
 import com.cars24.ai_loan_assistance.util.JwtUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

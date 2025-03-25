@@ -29,7 +29,7 @@ public class UserDetailService implements UserDetailsService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword());//, authorities);
+        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword());
     }}
 //By implementing this, you allow Spring Security to fetch user data using a username (email) from your database using UserRepository.
 //Without it, Spring Security won’t know how to retrieve users for authentication.

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class PromptServiceImpl implements PromptService {
     @Autowired
     private MongoTemplate mongoTemplate;
+
     @Override
     public List<NextPromptResponse> getInitialPrompts() {
         Query query = new Query(Criteria
@@ -27,17 +28,15 @@ public class PromptServiceImpl implements PromptService {
 
              return prompts.stream()
                 .map(this::convertToNextResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public List<NextPromptResponse> getNextPrompts(String prompt_id) {
-        Query findPromptQuery = new Query(Criteria.where("prompt_id").is(prompt_id));
+    public List<NextPromptResponse> getNextPrompts(String promptId) {
+        Query findPromptQuery = new Query(Criteria.where("prompt_id").is(promptId));
         Prompt prompt = mongoTemplate.findOne(findPromptQuery, Prompt.class);
-        //Prompt prompt = mongoTemplate.findById(promptId, Prompt.class);
         if (prompt == null) {
-            //throw new RuntimeException("Prompt not found: " + promptId);
-            throw new PromptNotFoundException("Prompt not found :" + prompt_id);
+            throw new PromptNotFoundException("Prompt not found :" + promptId);
         }
 
         Query query = new Query(Criteria.where("prompt_id").in(prompt.getNextPromptIds()));
@@ -45,12 +44,12 @@ public class PromptServiceImpl implements PromptService {
 
         return nextPrompts.stream()
                 .map(this::convertToNextResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private NextPromptResponse convertToNextResponse(Prompt prompt) {
         NextPromptResponse nextPromptResponse = new NextPromptResponse();
-        nextPromptResponse.setPrompt_id(prompt.getPrompt_id());
+        nextPromptResponse.setPromptId(prompt.getPrompt_id());
         nextPromptResponse.setText(prompt.getText());
         nextPromptResponse.setCategory(prompt.getCategory());
         return nextPromptResponse;

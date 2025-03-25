@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
         userEntity.setName(user.getName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(encodedPassword);
-//        userEntity.setRole(user.getRole());
         userEntity.setPhone(user.getPhone());
 
         dao.saveUser(userEntity);
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 String id = String.valueOf(userEntity.getId());
                 String name = userEntity.getName();
 
-                String token = jwtUtil.generateToken(user.getEmail(), id);//, (role));
+                String token = jwtUtil.generateToken(user.getEmail(), id);
 
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("token", token);

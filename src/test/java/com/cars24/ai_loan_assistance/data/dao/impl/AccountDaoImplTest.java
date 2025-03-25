@@ -3,7 +3,6 @@ package com.cars24.ai_loan_assistance.data.dao.impl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.cars24.ai_loan_assistance.data.dao.impl.AccountDaoImpl;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserInformationEntity;
 import com.cars24.ai_loan_assistance.data.repositories.UserInformationRepository;
@@ -99,7 +98,7 @@ class AccountDaoImplTest {
 
         assertNotNull(response);
         assertEquals("123456789012", response.getAadhar());
-        assertEquals("ABCDE1234F", response.getPAN());
+        assertEquals("ABCDE1234F", response.getPan());
     }
 
     @Test

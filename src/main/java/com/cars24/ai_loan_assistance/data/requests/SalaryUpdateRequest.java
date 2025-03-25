@@ -1,6 +1,6 @@
 package com.cars24.ai_loan_assistance.data.requests;
 
-import com.cars24.ai_loan_assistance.data.entities.enums.IncomeType;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.Data;

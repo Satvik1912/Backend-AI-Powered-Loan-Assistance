@@ -13,7 +13,7 @@ public class FeedbackServiceImpl {
     public void feedback(Long loggedInUserId, String feedback)
     {
         FeedBackEntity feedBackEntity = new FeedBackEntity();
-        feedBackEntity.setUser_id(loggedInUserId);
+        feedBackEntity.setUserId(loggedInUserId);
         feedBackEntity.setFeedback(feedback);
         feedBackRepository.save(feedBackEntity);
     }}
