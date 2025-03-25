@@ -107,7 +107,7 @@ public class UserDetailsMapper {
             String pan = (String) data[4];
             String aadhar = (String) data[5];
             Double salary = (data[6] instanceof BigDecimal) ? ((BigDecimal) data[6]).doubleValue() : (Double) data[6];
-            Integer cibil = (data[7] instanceof BigDecimal) ? ((BigDecimal) data[7]).intValue() : (Integer) data[7];
+            Integer cibil = (data[7] instanceof Number) ? ((Number) data[7]).intValue() : null;
             String incomeType = (String) data[8];
             String loanStatus = (String) data[9];
             String loanType = (String) data[10];
@@ -116,9 +116,9 @@ public class UserDetailsMapper {
             Double tenure = (data[13] instanceof BigDecimal) ? ((BigDecimal) data[13]).doubleValue() : (Double) data[13];
             Double interest = (data[14] instanceof BigDecimal) ? ((BigDecimal) data[14]).doubleValue() : (Double) data[14];
             Double emiAmount = (data[15] instanceof BigDecimal) ? ((BigDecimal) data[15]).doubleValue() : (Double) data[15];
-            Integer overdueCount = (data[16] instanceof BigDecimal) ? ((BigDecimal) data[16]).intValue() : (Integer) data[16];
-            Integer pendingCount = (data[17] instanceof BigDecimal) ? ((BigDecimal) data[17]).intValue() : (Integer) data[17];
-            Integer paidCount = (data[18] instanceof BigDecimal) ? ((BigDecimal) data[18]).intValue() : (Integer) data[18];
+            Integer overdueCount = (data[16] instanceof Number) ? ((Number) data[16]).intValue() : null;
+            Integer pendingCount = (data[17] instanceof Number) ? ((Number) data[17]).intValue() : null;
+            Integer paidCount = (data[18] instanceof Number) ? ((Number) data[18]).intValue() : null;
             LocalDate nextDueDate = data[19] != null ? ((java.sql.Date) data[19]).toLocalDate() : null;
             Double totalLateFee = (data[20] instanceof BigDecimal) ? ((BigDecimal) data[20]).doubleValue() : (Double) data[20];
             String accountNumber = (String) data[21];

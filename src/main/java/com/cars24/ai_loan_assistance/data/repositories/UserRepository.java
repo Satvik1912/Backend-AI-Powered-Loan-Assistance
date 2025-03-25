@@ -78,12 +78,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
         "        l.principal,\n" +
         "        l.tenure,\n" +
         "        l.interest,\n" +
-        "        e.emi_amount,\n" +
+        "        COALESCE(e.emi_amount, 0) AS emi_amount, \n" +  // Fix NULL issue
         "        SUM(CASE WHEN e.status = 'OVERDUE' THEN 1 ELSE 0 END) AS overdue_count,\n" +
         "        SUM(CASE WHEN e.status = 'PENDING' THEN 1 ELSE 0 END) AS pending_count,\n" +
         "        SUM(CASE WHEN e.status = 'PAID' THEN 1 ELSE 0 END) AS paid_count,\n" +
         "        MIN(CASE WHEN e.status = 'PENDING' THEN e.due_date ELSE NULL END) AS next_due_date,\n" +
-        "        SUM(e.late_fee) AS total_late_fee\n" +
+        "        COALESCE(SUM(e.late_fee), 0) AS total_late_fee \n" + // Fix NULL issue
         "    FROM loan l\n" +
         "    LEFT JOIN emi e ON l.loan_id = e.loan_id\n" +
         "    GROUP BY l.user_id, l.loan_id, e.emi_amount\n" +
@@ -95,30 +95,31 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
         "    u.email,\n" +
         "    ui.pan, \n" +
         "    ui.aadhar, \n" +
-        "    ui.salary, \n" +
-        "    ui.cibil, \n" +
+        "    COALESCE(ui.salary, 0) AS salary, \n" +  // Fix NULL issue
+        "    COALESCE(ui.cibil, 0) AS cibil, \n" +  // Fix NULL issue
         "    ui.income_type,\n" +
         "    les.loan_status, \n" +
         "    les.loan_type, \n" +
         "    les.disbursed_date, \n" +
-        "    les.principal, \n" +
-        "    les.tenure, \n" +
-        "    les.interest, \n" +
+        "    COALESCE(les.principal, 0) AS principal, \n" +  // Fix NULL issue
+        "    COALESCE(les.tenure, 0) AS tenure, \n" +  // Fix NULL issue
+        "    COALESCE(les.interest, 0) AS interest, \n" +  // Fix NULL issue
         "    les.emi_amount, \n" +
         "    les.overdue_count, \n" +
         "    les.pending_count, \n" +
         "    les.paid_count, \n" +
         "    les.next_due_date, \n" +
         "    les.total_late_fee,\n" +
-        "    b.account_no AS account_number,\n" +
-        "    b.account_holder_name,\n" +
-        "    b.ifsc_code,\n" +
-        "    b.bank_name,\n" +
-        "    b.bank_account_type\n" +
+        "    COALESCE(b.account_no, '') AS account_number,\n" +  // Fix NULL issue
+        "    COALESCE(b.account_holder_name, '') AS account_holder_name,\n" +  // Fix NULL issue
+        "    COALESCE(b.ifsc_code, '') AS ifsc_code,\n" +  // Fix NULL issue
+        "    COALESCE(b.bank_name, '') AS bank_name,\n" +  // Fix NULL issue
+        "    COALESCE(b.bank_account_type, '') AS bank_account_type\n" +  // Fix NULL issue
         "FROM users u\n" +
         "LEFT JOIN user_information ui ON u.user_id = ui.user_id\n" +
         "LEFT JOIN LoanEmiStatus les ON u.user_id = les.user_id\n" +
         "LEFT JOIN bank_details b ON u.user_id = b.user_id\n" +
         "WHERE u.user_id = ?;\n", nativeQuery = true)
 List<Object[]> getUserDetails(Long userId);
+
 }
