@@ -36,7 +36,7 @@ public class SecurityConfig {
                 //Cross-Site Request Forgery
                 // CSRF protection is disabled, which is common for APIs since they often don't use browser-based forms.
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/signup", "/api/login","/api/chatbot/interaction").permitAll()
+                        .requestMatchers("/api/signup", "/api/login","/api/chatbot/interaction","/api/all").permitAll()
                         .requestMatchers("/pdfs/**").permitAll()
                         .anyRequest().authenticated()
                 )
