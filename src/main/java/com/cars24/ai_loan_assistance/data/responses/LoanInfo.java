@@ -7,12 +7,12 @@ import java.time.LocalDate;
 
 @Data
 public class LoanInfo {
-    private long loan_id;
+    private long loanId;
     private LocalDate disbursedDate;
     private LoanType type;
 
     public LoanInfo(long loan_id, LocalDate disbursedDate, LoanType type) {
-        this.loan_id = loan_id;
+        this.loanId = loan_id;
         this.disbursedDate = disbursedDate;
         this.type = type;
     }

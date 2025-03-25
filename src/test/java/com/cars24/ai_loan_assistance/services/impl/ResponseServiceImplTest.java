@@ -53,8 +53,8 @@ class ResponseServiceImplTest {
         RespCollectionResponse response = responseService.getResponseByPromptId("1");
 
         assertNotNull(response);
-        assertEquals("101", response.getResponse_id());
-        assertEquals("1", response.getPrompt_id());
+        assertEquals("101", response.getResponseId());
+        assertEquals("1", response.getPromptId());
         assertEquals("Sample response", response.getText());
         assertFalse(response.isHasAttachments());
 

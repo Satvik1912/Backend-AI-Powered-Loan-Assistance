@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface BankDetailsRepository extends JpaRepository<BankEntity,Long> {
 
-// BankDetailsEntity getByUid(Long uid);
+
  long countByBankId(Long bankId);
  List<BankEntity> findByUserId(long userId);
  Optional<BankEntity> findById(Long bankId);

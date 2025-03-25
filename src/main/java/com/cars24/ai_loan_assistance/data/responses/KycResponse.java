@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class KycResponse {
-    String PAN;
-    String Aadhar;
+    String pan;
+    String aadhar;
 }

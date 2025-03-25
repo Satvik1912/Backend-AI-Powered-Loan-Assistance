@@ -2,7 +2,6 @@ package com.cars24.ai_loan_assistance.controllers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//package com.cars24.ai_loan_assistance.controllers;
 
 import com.cars24.ai_loan_assistance.data.responses.*;
 import com.cars24.ai_loan_assistance.services.PromptService;
@@ -15,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

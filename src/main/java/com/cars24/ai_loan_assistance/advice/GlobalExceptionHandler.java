@@ -19,19 +19,21 @@ import java.util.Map;
 @ControllerAdvice
 public class    GlobalExceptionHandler {
 
+    private static final String APP_USER_PREFIX = "APP_USER - ";
+    private static final String GENERIC_CHATBOT_PREFIX = "GENERIC_CHATBOT-";
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleValidationExceptions(MethodArgumentNotValidException exception)
     {
         Map<String,String> errorMap=new HashMap<>();
-        exception.getBindingResult().getFieldErrors().forEach(error->
-        {
-            errorMap.put(error.getField(),error.getDefaultMessage());
-        });
+        exception.getBindingResult().getFieldErrors()
+                .forEach(error-> errorMap.put(error.getField(),error.getDefaultMessage()));
 
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "ERROR: INVALID DATA!",
-                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                APP_USER_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 errorMap);
         return ResponseEntity.badRequest().body(apiResponse);
@@ -43,7 +45,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 exception.getMessage(),
-                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                APP_USER_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 null);
         return ResponseEntity.badRequest().body(apiResponse);
@@ -59,7 +61,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "ERROR: INVALID DATA!",
-                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                APP_USER_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 errorMap);
         return ResponseEntity.badRequest().body(apiResponse);
@@ -70,7 +72,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "ERROR: Invalid value for field! " + exception.getMessage(),
-                "APP_USER - " + HttpStatus.BAD_REQUEST.value(),
+                APP_USER_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 null
         );
@@ -82,7 +84,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                "GENERIC_CHATBOT-" + HttpStatus.BAD_REQUEST.value(),
+                GENERIC_CHATBOT_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 null
         );
@@ -95,7 +97,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
-                "GENERIC_CHATBOT-" + HttpStatus.BAD_REQUEST.value(),
+                GENERIC_CHATBOT_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 null
         );
@@ -108,7 +110,7 @@ public class    GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred.",
-                "GENERIC_CHATBOT-" + HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                GENERIC_CHATBOT_PREFIX + HttpStatus.BAD_REQUEST.value(),
                 false,
                 ex
         );

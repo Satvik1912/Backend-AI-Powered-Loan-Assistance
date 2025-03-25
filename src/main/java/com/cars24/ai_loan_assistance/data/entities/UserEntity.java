@@ -1,6 +1,6 @@
 package com.cars24.ai_loan_assistance.data.entities;
 
-import com.cars24.ai_loan_assistance.data.entities.enums.Role;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -53,9 +53,6 @@ public class UserEntity {
     @Column(name = "address")
     private String address;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role", nullable = false)
-//    private Role role = Role.ADMIN;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;

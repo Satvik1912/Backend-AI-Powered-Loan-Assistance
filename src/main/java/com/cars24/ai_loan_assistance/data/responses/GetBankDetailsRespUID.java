@@ -4,13 +4,13 @@ import lombok.Data;
 
 @Data
 public class GetBankDetailsRespUID {
-    private String full_name;
+    private String fullName;
 
-    private String account_no;
+    private String accountNo;
 
-    private  String bank_acc_type;
+    private  String bankAccType;
 
-    private  String bank_name;
+    private  String bankName;
 
-    private  String ifsc_code;
+    private  String ifscCode;
 }

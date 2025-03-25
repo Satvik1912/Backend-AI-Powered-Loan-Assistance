@@ -1,6 +1,6 @@
 package com.cars24.ai_loan_assistance.data.dao.impl;
 
-import com.cars24.ai_loan_assistance.data.dao.impl.UserDaoImpl;
+
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

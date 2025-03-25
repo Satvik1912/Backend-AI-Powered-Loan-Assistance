@@ -1,9 +1,6 @@
 package com.cars24.ai_loan_assistance.data.repositories;
 
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
-import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
-import com.cars24.ai_loan_assistance.data.entities.EmiEntity;
-import com.cars24.ai_loan_assistance.data.entities.BankEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

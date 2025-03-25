@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,72 +33,88 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain )
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestPath = request.getServletPath();
-        // Skip JWT validation for public endpoints such as login and signup.
-        if (requestPath.startsWith("/api/login") || requestPath.startsWith("/api/signup")) {
+       
+
+        if (isPublicEndpoint(requestPath)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = null;
-
-        // Attempt to get the token from cookies first
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        // Fallback to the Authorization header if no token was found in cookies
-        if (token == null) {
-            final String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                token = authorizationHeader.substring(7);
-            }
-        }                 //              Cookie 	Authorization
-        //API request from a browser	   Yes	      No	       Token from Cookie
-        //Mobile app using headers	       No	      Yes	       Token from Header
-
+        String token = extractToken(request);
         if (token == null) {
             logger.debug("No JWT token found in request for path: " + requestPath);
-        } else {
-            String email = jwtUtil.extractEmail(token);
-            logger.debug("Extracted email from token: " + email);
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                try {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                    if (userDetails != null && jwtUtil.validateToken(token, email)) {
-                        UsernamePasswordAuthenticationToken authToken =
-                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                        logger.debug("User authenticated successfully: " + email);
-                    } else {
-                        logger.debug("Invalid JWT token for email: " + email);
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
-                        return;
-                    }
-                } catch (UsernameNotFoundException exc) {
-                    logger.debug("User not found for email: " + email);
-                    Cookie cookie = new Cookie("token", null);
-                    cookie.setHttpOnly(true);
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not found");
-                    return;
-                }
-            }
+            filterChain.doFilter(request, response);
+            return;
         }
 
+        String email = jwtUtil.extractEmail(token);
+        logger.debug("Extracted email from token: " + email);
+
+        if (email == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        authenticateUser(email, token, request, response);
         filterChain.doFilter(request, response);
     }
 
+    private boolean isPublicEndpoint(String path) {
+        return path.startsWith("/api/login") || path.startsWith("/api/signup");
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+
+        return null;
+    }
+
+    private void authenticateUser(String email, String token, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        try {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+            if (jwtUtil.validateToken(token, email)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                logger.debug("User authenticated successfully: " + email);
+            } else {
+                sendUnauthorizedResponse(response, "Invalid JWT Token");
+            }
+        } catch (UsernameNotFoundException e) {
+            logger.debug("User not found for email: " + email);
+            clearTokenCookie(response);
+            sendUnauthorizedResponse(response, "User not found");
+        }
+    }
+
+    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+    }
+
+    private void clearTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }
