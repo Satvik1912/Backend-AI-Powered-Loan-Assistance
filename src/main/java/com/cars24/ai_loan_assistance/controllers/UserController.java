@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5005"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:8000"}, allowCredentials = "true")
 @Slf4j
 public class UserController {
 
@@ -51,18 +51,15 @@ public class UserController {
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest user, HttpServletResponse httpServletResponse) {
         try{
             ApiResponse response = userService.login(user);
-
             Map<String, Object> dataMap = (Map<String, Object>) response.getData();
             String token = (String) dataMap.get("token");
             dataMap.remove("token");
-
-            // Create an HttpOnly cookie to store the token.
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(false);
             cookie.setPath("/");
-            cookie.setMaxAge(86400); // Token expiration: 86400 seconds = 1 day
-            httpServletResponse.addCookie(cookie);//Attaches the cookie to the HTTP response, sending it to the client.
+            cookie.setMaxAge(86400);
+            httpServletResponse.addCookie(cookie);
             response.setData(dataMap);
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
@@ -83,7 +80,7 @@ public class UserController {
         // Clear the token cookie
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set to true in production if using HTTPS
+        cookie.setSecure(false); // need to set true for HTTPS, currently using http
         cookie.setPath("/");
         cookie.setMaxAge(0); // Immediately expire the cookie
         httpServletResponse.addCookie(cookie);
