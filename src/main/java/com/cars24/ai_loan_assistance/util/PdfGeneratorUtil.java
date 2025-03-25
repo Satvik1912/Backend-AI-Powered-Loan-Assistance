@@ -2,11 +2,9 @@ package com.cars24.ai_loan_assistance.util;
 
 import com.cars24.ai_loan_assistance.data.entities.EmiEntity;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
-import com.cars24.ai_loan_assistance.data.entities.enums.EmiStatus;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.net.URL;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;

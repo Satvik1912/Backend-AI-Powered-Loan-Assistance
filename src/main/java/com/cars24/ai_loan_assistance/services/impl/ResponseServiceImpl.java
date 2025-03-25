@@ -15,10 +15,13 @@ import org.springframework.data.mongodb.core.query.Query;
 
 @Service
 public class ResponseServiceImpl implements ResponseService {
-    @Autowired
-    private MongoTemplate mongoTemplate;
-    @Autowired
-    private ResponseRepository responseRepository;
+    private final MongoTemplate mongoTemplate;
+
+
+    public ResponseServiceImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+
+    }
 
     @Override
     public RespCollectionResponse getResponseByPromptId(String promptId){

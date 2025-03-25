@@ -38,10 +38,6 @@ public class UserBotController {
             @RequestParam(required = false) Long additional,
             Authentication authentication) {
 
-//        Object principal = authentication.getPrincipal();
-//
-//        if (principal instanceof CustomUserDetails) {
-//            CustomUserDetails userDetails = (CustomUserDetails) principal;
         if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
             if (userValidationService.isValidUser(loggedInUserId, additional, promptId)) {
@@ -67,7 +63,7 @@ public class UserBotController {
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        //Object principal = authentication.getPrincipal();
+
 
         if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
@@ -91,9 +87,9 @@ public class UserBotController {
             @Valid @RequestBody Map<String, Object> request,
             Authentication authentication) {
 
-        //Object principal = authentication.getPrincipal();
 
-        //if (principal instanceof CustomUserDetails userDetails) {// Simplified pattern matching
+
+
         if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             Long loggedInUserId = userDetails.getUserId();
 
@@ -115,8 +111,7 @@ public class UserBotController {
         //Object principal = authentication.getPrincipal();
 
         Long loggedInUserId = null;
-//        if (principal instanceof CustomUserDetails) {
-//            CustomUserDetails userDetails = (CustomUserDetails) principal;
+
         if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             loggedInUserId = userDetails.getUserId();
         }

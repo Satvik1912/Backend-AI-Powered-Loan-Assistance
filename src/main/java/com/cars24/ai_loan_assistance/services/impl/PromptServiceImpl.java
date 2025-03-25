@@ -16,8 +16,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class PromptServiceImpl implements PromptService {
-    @Autowired
-    private MongoTemplate mongoTemplate;
+
+    private final MongoTemplate mongoTemplate;
+
+    public PromptServiceImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public List<NextPromptResponse> getInitialPrompts() {

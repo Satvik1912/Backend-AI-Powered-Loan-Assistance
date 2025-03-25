@@ -1,6 +1,6 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
-import ch.qos.logback.classic.Logger;
+
 import com.cars24.ai_loan_assistance.data.entities.EmiEntity;
 import com.cars24.ai_loan_assistance.data.entities.LoanEntity;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
@@ -23,12 +23,18 @@ import java.util.*;
 @Slf4j
 public class EmiServiceImpl implements EmiService {
 
+
+    private final EmiRepository emiRepository;
+    private final UserRepository userRepository;
+    private final LoanRepository loanRepository;
+
     @Autowired
-    private EmiRepository emiRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private LoanRepository loanRepository;
+    public EmiServiceImpl(EmiRepository emiRepository, UserRepository userRepository, LoanRepository loanRepository) {
+        this.emiRepository = emiRepository;
+        this.userRepository = userRepository;
+        this.loanRepository = loanRepository;
+    }
+
 
     @Override
     public Object getEmiDetails(long userId, Long loanId) {
@@ -45,7 +51,6 @@ public class EmiServiceImpl implements EmiService {
         String userName = userOpt.get().getName();
         LoanEntity loan = loanOpt.get();
         List<EmiEntity> emis = emiRepository.findEmisByLoanId(loanId);
-        
 
 
         if (emis.isEmpty()) {
@@ -80,9 +85,4 @@ public class EmiServiceImpl implements EmiService {
                 "pdfPath", pdfPath
         );
     }
-
-
-
-
-
 }
