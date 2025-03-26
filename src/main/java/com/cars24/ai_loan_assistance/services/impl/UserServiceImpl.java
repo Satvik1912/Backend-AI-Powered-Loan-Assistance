@@ -1,15 +1,16 @@
 package com.cars24.ai_loan_assistance.services.impl;
 
 import com.cars24.ai_loan_assistance.data.dao.impl.UserDaoImpl;
+import com.cars24.ai_loan_assistance.data.dto.UserDetailsResponseDto;
 import com.cars24.ai_loan_assistance.data.entities.UserEntity;
-import com.cars24.ai_loan_assistance.data.entities.enums.Role;
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
 import com.cars24.ai_loan_assistance.data.requests.LoginRequest;
 import com.cars24.ai_loan_assistance.data.requests.SignupRequest;
 import com.cars24.ai_loan_assistance.data.responses.ApiResponse;
-import com.cars24.ai_loan_assistance.exceptions.NotFoundException;
+import com.cars24.ai_loan_assistance.services.UserDetailsMapper;
 import com.cars24.ai_loan_assistance.services.UserService;
 import com.cars24.ai_loan_assistance.util.JwtUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -85,4 +86,14 @@ public class UserServiceImpl implements UserService {
         }
         throw new RuntimeException("User doesn't exist. Please SignUp");
     }
+    private final UserDetailsMapper userDetailsMapper;
+
+//    @Transactional
+//    public UserDetailsResponseDto getUserCompleteDetails(Long userId) {
+//        UserEntity userEntity = userRepository.findByIdWithAllDetails(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+//
+//        return userDetailsMapper.mapToUserDetailsResponse(userEntity);
+//    }
+
 }
