@@ -19,8 +19,8 @@ public class UserAllDetailsController {
 
     @PostMapping("/all")
     public ResponseEntity<ApiResponse> getUserDetails(@RequestParam Long userId, @RequestBody OllamaRequest ollamaRequest) {
-        String user_data = userService.getUserDetailsAsParagraph(userId);
-        String response = fastAPIOllamaService.callFastAPI(ollamaRequest.getUserQuery(), user_data);
+        String userData = userService.getUserDetailsAsParagraph(userId);
+        String response = fastAPIOllamaService.callFastAPI(ollamaRequest.getUserQuery(), userData);
         return ResponseEntity.ok(new ApiResponse((HttpStatus.OK.value()),"Response generated successfully!","Ollama_Service",true, response));
     }
 }

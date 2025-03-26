@@ -88,12 +88,4 @@ public class UserServiceImpl implements UserService {
     }
     private final UserDetailsMapper userDetailsMapper;
 
-//    @Transactional
-//    public UserDetailsResponseDto getUserCompleteDetails(Long userId) {
-//        UserEntity userEntity = userRepository.findByIdWithAllDetails(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-//
-//        return userDetailsMapper.mapToUserDetailsResponse(userEntity);
-//    }
-
 }

@@ -74,20 +74,24 @@
 //    }
 //}
 package com.cars24.ai_loan_assistance.services;
-import com.cars24.ai_loan_assistance.data.dto.UserDetailsResponseDto;
-import com.cars24.ai_loan_assistance.data.entities.*;
+
 import com.cars24.ai_loan_assistance.data.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
+@Slf4j
 @Component
 public class UserDetailsMapper {
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserDetailsMapper(UserRepository userRepository) {  // Constructor Injection
+        this.userRepository = userRepository;
+    }
 
     public String getUserDetailsAsParagraph(Long userId) {
         try {
@@ -106,43 +110,46 @@ public class UserDetailsMapper {
             String email = (String) data[3];
             String pan = (String) data[4];
             String aadhar = (String) data[5];
-            Double salary = (data[6] instanceof BigDecimal) ? ((BigDecimal) data[6]).doubleValue() : (Double) data[6];
-            Integer cibil = (data[7] instanceof Number) ? ((Number) data[7]).intValue() : null;
+
+            Double salary = data[6] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[6];
+            Integer cibil = data[7] instanceof Number number ? number.intValue() : null;
             String incomeType = (String) data[8];
             String loanStatus = (String) data[9];
             String loanType = (String) data[10];
             LocalDate disbursedDate = data[11] != null ? ((java.sql.Date) data[11]).toLocalDate() : null;
-            Double principal = (data[12] instanceof BigDecimal) ? ((BigDecimal) data[12]).doubleValue() : (Double) data[12];
-            Double tenure = (data[13] instanceof BigDecimal) ? ((BigDecimal) data[13]).doubleValue() : (Double) data[13];
-            Double interest = (data[14] instanceof BigDecimal) ? ((BigDecimal) data[14]).doubleValue() : (Double) data[14];
-            Double emiAmount = (data[15] instanceof BigDecimal) ? ((BigDecimal) data[15]).doubleValue() : (Double) data[15];
-            Integer overdueCount = (data[16] instanceof Number) ? ((Number) data[16]).intValue() : null;
-            Integer pendingCount = (data[17] instanceof Number) ? ((Number) data[17]).intValue() : null;
-            Integer paidCount = (data[18] instanceof Number) ? ((Number) data[18]).intValue() : null;
+            Double principal = data[12] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[12];
+            Double tenure = data[13] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[13];
+            Double interest = data[14] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[14];
+            Double emiAmount = data[15] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[15];
+            Integer overdueCount = data[16] instanceof Number number ? number.intValue() : null;
+            Integer pendingCount = data[17] instanceof Number number ? number.intValue() : null;
+            Integer paidCount = data[18] instanceof Number number ? number.intValue() : null;
             LocalDate nextDueDate = data[19] != null ? ((java.sql.Date) data[19]).toLocalDate() : null;
-            Double totalLateFee = (data[20] instanceof BigDecimal) ? ((BigDecimal) data[20]).doubleValue() : (Double) data[20];
+            Double totalLateFee = data[20] instanceof BigDecimal bigDecimal ? bigDecimal.doubleValue() : (Double) data[20];
             String accountNumber = (String) data[21];
             String accountHolderName = (String) data[22];
             String ifscCode = (String) data[23];
             String bankName = (String) data[24];
             String bankAccountType = (String) data[25];
 
+
             // Formatting into a paragraph
             return String.format("User %s with phone number %s and address %s has the email %s. " +
                             "Their PAN number is %s, Aadhar number is %s, with a salary of %.2f and a CIBIL score of %d. " +
                             "They have an income type of %s. Their loan status is %s, of type %s, disbursed on %s with a principal amount of %.2f, tenure of %.2f months, and interest of %.2f%%. " +
-                            "The EMI amount is %.2f, with %d overdue payments, %d pending payments, and %d paid payments. The next due date for pending payments is %s with a total late fee of %.2f. " +
+                            "The EMI amount is %.2f, with %d overdue payments, %d pending payments, and %d paid payments. " +
+                            "The next due date for pending payments is %s with a total late fee of %.2f. " +
                             "The bank account number is %s, account holder name is %s, IFSC code is %s, bank name is %s, and the account type is %s.",
                     name, phone, address, email, pan, aadhar, salary, cibil, incomeType,
-                    loanStatus, loanType, disbursedDate != null ? disbursedDate.toString() : "N/A", principal, tenure, interest,
-                    emiAmount, overdueCount, pendingCount, paidCount,
+                    loanStatus, loanType, disbursedDate != null ? disbursedDate.toString() : "N/A",
+                    principal, tenure, interest, emiAmount, overdueCount, pendingCount, paidCount,
                     nextDueDate != null ? nextDueDate.toString() : "No pending EMIs",
                     totalLateFee, accountNumber, accountHolderName, ifscCode, bankName, bankAccountType
             );
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return "Error fetching user details: " + e.getMessage();
+            log.error("Error fetching user details: {}", e.getMessage(), e); // Proper logging
+            return "Error fetching user details. Please try again later.";
         }
     }
 }

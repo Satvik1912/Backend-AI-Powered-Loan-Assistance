@@ -62,13 +62,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     );
 
 
-//    @Query("SELECT u FROM UserEntity u " +
-//            "LEFT JOIN FETCH u.userDetails " +
-//            "LEFT JOIN FETCH u.bankEntities " +
-//            "LEFT JOIN FETCH u.loans l " +
-//            "LEFT JOIN FETCH l.emis " +
-//            "WHERE u.id = :userId")
-//    Optional<UserEntity> findByIdWithAllDetails(@Param("userId") Long userId);
 @Query(value = "WITH LoanEmiStatus AS (\n" +
         "    SELECT\n" +
         "        l.user_id,\n" +
