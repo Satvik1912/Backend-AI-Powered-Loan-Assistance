@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:8000","http://localhost:5500"})
+@CrossOrigin(origins = {"http://localhost:8000","http://localhost:5173"})
 public class UserAllDetailsController {
     private final UserDetailsMapper userService;
     private final FastAPIOllamaService fastAPIOllamaService;
